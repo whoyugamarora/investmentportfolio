@@ -13,6 +13,7 @@ import { Grid, Paper, Typography } from "@mui/material";
 import PieChart from "./PieChart";
 import GoogleSheetChart from "./GoogleSheetChart";
 import { Scale, scales } from "chart.js";
+import Heatmap from "./Heatmap";
 
 const COLORS = ["#4F46E5", "#10B981", "#F59E0B", "#EF4444"];
 
@@ -82,7 +83,7 @@ const App = () => {
 
         {isLoading ? (
           <div className="flex justify-center items-center h-64">
-            <div className="text-xl text-gray-600">Loading...</div>
+            <div className="text-2xl font-bold text-gray-600">Loading...</div>
           </div>
         ) : (
           <>
@@ -129,6 +130,7 @@ const App = () => {
                     <tr className="border-b border-gray-200">
                       {[
                         { label: "Asset", key: "Company" },
+                        { label: "Quantity", key: "Quantity" },
                         { label: "Price", key: "Buy Price" },
                         { label: "Value", key: "Current Value" },
                         { label: "Profit/Loss", key: "Profit/Loss" },
@@ -137,7 +139,7 @@ const App = () => {
                         <th
                           key={header.key}
                           onClick={() => handleSort(header.key)}
-                          className="text-left pb-3 text-sm sm:text-xs md:text-sm font-medium text-gray-500 cursor-pointer"
+                          className="text-center pb-3 text-sm sm:text-xs md:text-sm font-medium text-gray-500 cursor-pointer"
                         >
                           {header.label}
                           {sortConfig.key === header.key &&
@@ -152,20 +154,23 @@ const App = () => {
                         <td className="py-4 text-xs sm:text-xs md:text-sm font-medium text-gray-900">
                           {row.Company}
                         </td>
-                        <td className="py-4 px-3 text-xs sm:text-xs md:text-sm text-gray-500 text-right">
+                        <td className="py-4 px-3 text-xs sm:text-xs md:text-sm text-gray-500 sm:text-center">
+                          ₹{row["Quantity"].toFixed(2)}
+                        </td>
+                        <td className="py-4 px-3 text-xs sm:text-xs md:text-sm text-gray-500 sm:text-center">
                           ₹{row["Buy Price"].toFixed(2)}
                         </td>
-                        <td className="py-4 px-3 text-xs sm:text-xs md:text-sm text-gray-900 font-medium text-right">
+                        <td className="py-4 px-3 text-xs sm:text-xs md:text-sm text-gray-900 font-medium sm:text-center">
                           ₹{row["Current Value"].toFixed(2)}
                         </td>
                         <td
-                          className={`py-4 px-3 text-xs sm:text-xs md:text-sm font-medium text-right ${row["Profit/Loss"] >= 0 ? "text-green-600" : "text-red-600"
+                          className={`py-4 px-3 text-xs sm:text-xs md:text-sm font-medium sm:text-center ${row["Profit/Loss"] >= 0 ? "text-green-600" : "text-red-600"
                             }`}
                         >
                           ₹{row["Profit/Loss"].toFixed(2)}
                         </td>
                         <td
-                          className={`py-4 text-xs sm:text-xs md:text-sm font-medium text-right ${row["PorLpercent"] >= 0 ? "text-green-600" : "text-red-600"
+                          className={`py-4 text-xs sm:text-xs md:text-sm font-medium sm:text-center ${row["PorLpercent"] >= 0 ? "text-green-600" : "text-red-600"
                             }`}
                         >
                           {row["PorLpercent"].toFixed(2)}%
@@ -181,13 +186,12 @@ const App = () => {
             {/* Combined Chart Section and Asset Allocation */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Google Sheet Chart */}
-              <div className="bg-white p-6 rounded-xl shadow-sm">
+              <div className="bg-white p-6 rounded-xl shadow-md">
                 <GoogleSheetChart />
               </div>
 
               {/* Asset Allocation */}
               <div>
-                <Grid item xs={12} lg={6}>
                   <Paper
                     elevation={4}
                     style={{
@@ -211,8 +215,12 @@ const App = () => {
                       <PieChart data={data} />
                     </div>
                   </Paper>
-                </Grid>
               </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl shadow-lg my-4">
+              <h1 className="text-3xl font-bold mb-8">Profit/Loss Heatmap</h1>
+              <Heatmap data={data} />
             </div>
 
 
