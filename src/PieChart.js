@@ -23,7 +23,7 @@ const PieChart = ({ data }) => {
           "#9C27B0",
           "#009688",
         ],
-        hoverOffset: 4,
+        hoverOffset: 5,
       },
     ],
   };
@@ -31,7 +31,12 @@ const PieChart = ({ data }) => {
   const options = {
     plugins: {
       legend: {
-        position: "right",
+        position: "bottom",
+        labels: {
+          font: {
+            size: 9,
+          }
+        }
       },
     },
     maintainAspectRatio: false,

@@ -1,19 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-import { Grid, Paper, Typography } from "@mui/material";
+import {Paper} from "@mui/material";
 import PieChart from "./PieChart";
 import GoogleSheetChart from "./GoogleSheetChart";
-import { Scale, scales } from "chart.js";
 import Heatmap from "./Heatmap";
+import HistoricalPerformance from "./historicalperformance";
 
 const COLORS = ["#4F46E5", "#10B981", "#F59E0B", "#EF4444"];
 
@@ -181,10 +172,9 @@ const App = () => {
                 </table>
               </div>
             </div>
-            <br />
 
             {/* Combined Chart Section and Asset Allocation */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-4">
               {/* Google Sheet Chart */}
               <div className="bg-white p-6 rounded-xl shadow-md">
                 <GoogleSheetChart />
@@ -195,7 +185,7 @@ const App = () => {
                   <Paper
                     elevation={4}
                     style={{
-                      padding: "2rem",
+                      padding: "1rem",
                       borderRadius: "15px",
                       boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
                       textAlign: "center",
@@ -208,7 +198,7 @@ const App = () => {
                       style={{
                         width: "100%",
                         height: "100%",
-                        maxHeight: "400px",
+                        maxHeight: "auto",
                         overflow: "hidden",
                       }}
                     >
@@ -221,6 +211,11 @@ const App = () => {
             <div className="bg-white p-6 rounded-xl shadow-lg my-4">
               <h1 className="text-3xl font-bold mb-8">Profit/Loss Heatmap</h1>
               <Heatmap data={data} />
+            </div>
+
+            <div className="bg-white p-6 rounded-xl shadow-lg my-4">
+              <h1 className="text-3xl font-bold mb-8">Weekly Historical Performance </h1>
+              <HistoricalPerformance/>
             </div>
 
 
