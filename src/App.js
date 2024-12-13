@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Paper } from "@mui/material";
+import { Fade, Paper } from "@mui/material";
 import PieChart from "./PieChart";
 import GoogleSheetChart from "./GoogleSheetChart";
 import Heatmap from "./Heatmap";
 import HistoricalPerformance from "./historicalperformance";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
+import ComparisonChart from "./ComparisonChart";
 
 const App = () => {
   const [data, setData] = useState([]);
@@ -67,7 +68,7 @@ const App = () => {
             onClick={() => setDarkMode(!darkMode)}
             className="text-xl focus:outline-none mb-8"
           >
-            <FontAwesomeIcon icon={darkMode ? faSun : faMoon} size="lg" />
+            <FontAwesomeIcon icon={darkMode ? faSun : faMoon} size="lg" color={darkMode ? "yellow" : "black"} />
           </button>
         </div>
 
@@ -78,7 +79,7 @@ const App = () => {
         ) : (
           <>
             {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
               <div
                 className={`p-6 rounded-xl shadow-sm ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
                   }`}
@@ -114,6 +115,20 @@ const App = () => {
                     }`}
                 >
                   {calculateProfitPercentage()}%
+                </p>
+              </div>
+              <div
+                className={`p-6 rounded-xl shadow-sm ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
+                  }`}
+              >
+                <h3 className="text-sm font-medium">Today's Return</h3>
+                <p
+                  className={`text-2xl font-bold ${calculateTotalValue("Day Gain") >= 0
+                    ? "text-green-600"
+                    : "text-red-600"
+                    }`}
+                >
+                  {calculateTotalValue("Day Gain")}
                 </p>
               </div>
             </div>
@@ -194,7 +209,7 @@ const App = () => {
                 className={`p-6 rounded-xl shadow-md ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
                   }`}
               >
-                <GoogleSheetChart />
+                <ComparisonChart />
               </div>
 
               {/* Asset Allocation */}
@@ -206,9 +221,7 @@ const App = () => {
                   style={{
                     padding: "1rem",
                     borderRadius: "15px",
-                    boxShadow: darkMode
-                      ? "0px 4px 12px rgba(255, 255, 255, 0.2)"
-                      : "0px 4px 12px rgba(0, 0, 0, 0.1)",
+                    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
                     textAlign: "center",
                     backgroundColor: darkMode ? "#1F2937" : "#FFFFFF", // Dynamically set background color
                   }}
