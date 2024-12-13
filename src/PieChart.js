@@ -4,7 +4,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const PieChart = ({ data }) => {
+const PieChart = ({ data, darkMode }) => {
   const chartData = {
     labels: data.map((item) => item.Company),
     datasets: [
@@ -35,21 +35,42 @@ const PieChart = ({ data }) => {
         labels: {
           font: {
             size: 9,
-          }
-        }
+          },
+          color: darkMode ? "#FFFFFF" : "#000000", // Legend text color
+        },
+      },
+      tooltip: {
+        backgroundColor: darkMode ? "#333333" : "#FFFFFF", // Tooltip background color
+        titleColor: darkMode ? "#FFFFFF" : "#000000", // Tooltip title color
+        bodyColor: darkMode ? "#FFFFFF" : "#000000", // Tooltip body color
       },
     },
     maintainAspectRatio: false,
+    layout: {
+      padding: 10,
+    },
+    elements: {
+      arc: {
+        borderWidth: 1,
+        borderColor: darkMode ? "#333333" : "#FFFFFF", // Adjust border for dark mode
+      },
+    },
   };
 
   return (
-    <div style={{ width: "100%", height: "400px" }}>
+    <div
+      style={{
+        width: "100%",
+        height: "400px",
+        backgroundColor: darkMode ? "#1F2937" : "#FFFFFF", // Dark gray for dark mode, white for light mode
+        color: darkMode ? "#FFFFFF" : "#000000", // Ensure text color matches the mode
+        padding: "1rem",
+        borderRadius: "10px",
+      }}
+    >
       <Pie data={chartData} options={options} />
     </div>
   );
 };
 
 export default PieChart;
-
-
- 
