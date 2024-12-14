@@ -5,7 +5,7 @@ import PieChart from "./Components/PieChart";
 import Heatmap from "./Components/Heatmap";
 import HistoricalPerformance from "./Components/historicalperformance";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
+import { faSun, faMoon, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import ComparisonChart from "./Components/ComparisonChart";
 import { signOut } from "firebase/auth";
 import { auth } from "./Authentication/firebase";
@@ -102,15 +102,15 @@ const Dashboard = () => {
             onClick={() => setDarkMode(!darkMode)}
             className="text-xl focus:outline-none mb-8"
           >
-            <FontAwesomeIcon icon={darkMode ? faSun : faMoon} size="lg" color={darkMode ? "yellow" : "black"} />
+            <FontAwesomeIcon icon={darkMode ? faSun : faMoon} size="lg" color={darkMode ? "yellow" : "orange"} />
           </button>
-          <button className=" mb-8 px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg shadow-md hover:bg-red-600 transition-all duration-200" onClick={handleLogout}>Logout</button>
+          <button className=" mb-8 px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 transition-all duration-200" onClick={handleLogout}>Logout</button>
           </div>
         </div>
 
         {isLoading ? (
           <div className="flex justify-center items-center h-64">
-            <div className="text-2xl font-bold">Loading...</div>
+            <div className="text-2xl font-bold"><FontAwesomeIcon icon={faSpinner} className="fa-spin"/></div>
           </div>
         ) : (
           <>

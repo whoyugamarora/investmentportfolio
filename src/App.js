@@ -4,6 +4,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./Authentication/firebase";
 import Dashboard from "./Dashboard";
 import Login from "./Authentication/Login";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -20,7 +22,7 @@ const App = () => {
 
   if (loading) {
     // Show a loader while determining the auth state
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    return <div className="flex justify-center items-center h-screen"><FontAwesomeIcon icon={faSpinner} className="fa-spin"/></div>;
   }
 
   return (
