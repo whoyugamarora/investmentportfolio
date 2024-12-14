@@ -7,6 +7,11 @@ import HistoricalPerformance from "./Components/historicalperformance";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
 import ComparisonChart from "./Components/ComparisonChart";
+import { signOut } from "firebase/auth";
+import { auth } from "./Authentication/firebase";
+import { useNavigate } from "react-router-dom";
+
+
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
@@ -16,6 +21,8 @@ const Dashboard = () => {
   const [darkMode, setDarkMode] = useState(false); // State for dark mode
 
   const GOOGLE_SHEETS_URL = process.env.REACT_APP_SPREADSHEET_URL;
+  const navigate = useNavigate(); // Initialize useNavigate
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,6 +81,13 @@ const Dashboard = () => {
     setSortConfig({ key, direction });
   };
 
+  const handleLogout = async () => {
+    await signOut(auth);
+    alert("Logged out!");
+    navigate("/login");
+  };
+
+
   return (
     <div
       className={`min-h-screen ${darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-50 text-gray-900"
@@ -83,12 +97,15 @@ const Dashboard = () => {
         {/* Header with Toggle */}
         <div className="flex justify-between items-center w-full">
           <h1 className="text-3xl font-bold mb-8">Portfolio Tracker</h1>
+          <div className="w-40 flex items-center justify-center gap-8">
           <button
             onClick={() => setDarkMode(!darkMode)}
             className="text-xl focus:outline-none mb-8"
           >
             <FontAwesomeIcon icon={darkMode ? faSun : faMoon} size="lg" color={darkMode ? "yellow" : "black"} />
           </button>
+          <button className=" mb-8 px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg shadow-md hover:bg-red-600 transition-all duration-200" onClick={handleLogout}>Logout</button>
+          </div>
         </div>
 
         {isLoading ? (
