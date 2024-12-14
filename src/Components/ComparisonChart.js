@@ -29,8 +29,6 @@ const ComparisonChart = () => {
         }));
 
         setData(formattedData);
-        console.log(formattedData);
-        console.log("Data Fetched Comparison");
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -44,11 +42,11 @@ const ComparisonChart = () => {
   const yMax = Math.max(...data.map((d) => Math.max(d["PF Value"], d.Close)));
 
   return (
-    <div style={{ width: "100%", height: "400px" }}>
+    <div style={{ width: "100%", height: "500px" }}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data}>
-          <CartesianGrid strokeDasharray="4 4" />
-          <XAxis dataKey="Date" tickFormatter={(tick) => new Date(tick).toLocaleDateString()} />
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="Date" tick={{fontSize: 12}} tickFormatter={(tick) => new Date(tick).toLocaleDateString()} />
           <YAxis
             tick={{ fontSize: 12 }}
             label={{

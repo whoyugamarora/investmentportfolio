@@ -23,7 +23,7 @@ const PieChart = ({ data, darkMode }) => {
           "#9C27B0",
           "#009688",
         ],
-        hoverOffset: 5,
+        hoverOffset: 10,
       },
     ],
   };
@@ -47,11 +47,11 @@ const PieChart = ({ data, darkMode }) => {
     },
     maintainAspectRatio: false,
     layout: {
-      padding: 10,
+      padding: 2,
     },
     elements: {
       arc: {
-        borderWidth: 1,
+        borderWidth: 0,
         borderColor: darkMode ? "#333333" : "#FFFFFF", // Adjust border for dark mode
       },
     },
@@ -61,7 +61,7 @@ const PieChart = ({ data, darkMode }) => {
     <div
       style={{
         width: "100%",
-        height: "400px",
+        height: "500px",
         backgroundColor: darkMode ? "#1F2937" : "#FFFFFF", // Dark gray for dark mode, white for light mode
         color: darkMode ? "#FFFFFF" : "#000000", // Ensure text color matches the mode
         padding: "1rem",
