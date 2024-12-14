@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Fade, Paper } from "@mui/material";
+import { Paper } from "@mui/material";
 import PieChart from "./Components/PieChart";
 import Heatmap from "./Components/Heatmap";
 import HistoricalPerformance from "./Components/historicalperformance";
@@ -38,7 +38,7 @@ const Dashboard = () => {
     };
 
     fetchData();
-  }, []);
+  }, [GOOGLE_SHEETS_URL]);
 
   const calculateWeightedPE = (data) => {
     let totalWeightedPE = 0;
