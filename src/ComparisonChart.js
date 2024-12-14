@@ -45,7 +45,6 @@ const ComparisonChart = () => {
 
   return (
     <div style={{ width: "100%", height: "400px" }}>
-      <h2>Portfolio vs CNX 500 (Normalized)</h2>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="4 4" />

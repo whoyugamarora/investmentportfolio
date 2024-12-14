@@ -209,6 +209,12 @@ const App = () => {
                 className={`p-6 rounded-xl shadow-md ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
                   }`}
               >
+                <h2
+                  className={`text-xl font-semibold pb-6 text-left ${darkMode ? "text-gray-100" : "text-gray-900"
+                    }`}
+                >
+                  Portfolio vs CNX 500 (Normalized)
+                </h2>
                 <ComparisonChart />
               </div>
 
