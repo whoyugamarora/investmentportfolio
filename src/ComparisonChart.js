@@ -13,21 +13,24 @@ import axios from "axios";
 const ComparisonChart = () => {
   const [data, setData] = useState([]);
 
-  const GOOGLE_SHEET_URL = process.env.REACT_APP_HISTORICAL_PERFORMANCE_URL;
+  const GOOGLE_SHEET_URL = process.env.REACT_APP_COMPARISON_CHART;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(GOOGLE_SHEET_URL);
-        const rows = response.data; // Assume data is already formatted properly
-        const normalizedData = rows.map((row) => ({
-          Date: row.Date,
-          Portfolio: (row["Value"] / rows[0]["Value"]) * 100,
-          CNX500: (row["CNX500"] / rows[0]["CNX 500"]) * 100,
-          CNXSmallcap:
-            (row["CNX Smallcap"] / rows[0]["CNX Smallcap"]) * 100,
+        const initialClose = response.data[0]?.Close;
+        const initialPFValue = response.data[0]?.["PF Value"];
+
+        const formattedData = response.data.map((item) => ({
+          Date: item.Date,
+          "PF Value": ((item["PF Value"] / initialPFValue) * 100).toFixed(2),
+          Close: ((item.Close / initialClose) * 100).toFixed(2),
         }));
-        setData(normalizedData);
+
+        setData(formattedData);
+        console.log(formattedData);
+        console.log("Data Fetched Comparison");
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -36,18 +39,32 @@ const ComparisonChart = () => {
     fetchData();
   }, []);
 
+  // Find min and max for the Y-axis domain
+  const yMin = Math.min(...data.map((d) => Math.min(d["PF Value"], d.Close)));
+  const yMax = Math.max(...data.map((d) => Math.max(d["PF Value"], d.Close)));
+
   return (
     <div style={{ width: "100%", height: "400px" }}>
-      <h2>Portfolio vs CNX 500 vs CNX Smallcap</h2>
+      <h2>Portfolio vs CNX 500 (Normalized)</h2>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="Date" tickFormatter={(tick) => tick.slice(0, 7)} />
-          <YAxis tick={{ fontSize: 12 }} />
-          <Tooltip />
-          <Line type="monotone" dataKey="Portfolio" stroke="#FF6384" />
-          <Line type="monotone" dataKey="CNX500" stroke="#36A2EB" />
-          <Line type="monotone" dataKey="CNXSmallcap" stroke="#4CAF50" />
+          <CartesianGrid strokeDasharray="4 4" />
+          <XAxis dataKey="Date" tickFormatter={(tick) => new Date(tick).toLocaleDateString()} />
+          <YAxis
+            tick={{ fontSize: 12 }}
+            label={{
+              value: "Performance (%)",
+              angle: -90,
+              position: "insideLeft",
+            }}
+            domain={[Math.floor(yMin), Math.ceil(yMax)]} // Dynamic domain
+          />
+          <Tooltip
+            formatter={(value, name) => [`${value}%`, name]}
+            labelFormatter={(label) => `Date: ${new Date(label).toLocaleDateString()}`}
+          />
+          <Line type="monotone" strokeWidth={2} dataKey="PF Value" stroke="#FF6384" name="Portfolio (%)" />
+          <Line type="monotone" strokeWidth={2} dataKey="Close" stroke="#36A2EB" name="CNX 500 (%)" />
         </LineChart>
       </ResponsiveContainer>
     </div>
