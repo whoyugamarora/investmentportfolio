@@ -35,7 +35,7 @@ const ComparisonChart = () => {
     };
 
     fetchData();
-  }, [GOOGLE_SHEET_URLBPM ]);
+  }, [GOOGLE_SHEET_URL]);
 
   // Find min and max for the Y-axis domain
   const yMin = Math.min(...data.map((d) => Math.min(d["PF Value"], d.Close)));
