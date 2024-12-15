@@ -11,8 +11,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "./Authentication/firebase";
 import { useNavigate } from "react-router-dom";
 import GoalSection from "./Components/GoalSection";
-
-
+import { DownloadPDF } from "./Components/PortfolioPDF";
 
 const Dashboard = () => {
     const [data, setData] = useState([]);
@@ -212,6 +211,18 @@ const Dashboard = () => {
                                     {weightedPE}
                                 </p>
                             </div>
+                            <div
+                                className={`p-6 rounded-xl shadow-sm ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
+                                    }`}
+                            >
+                                <p
+                                    className={` font-bold ${weightedPE >= 0 && weightedPE <= 50
+                                        ? "text-green-600"
+                                        : "text-red-600"}`}
+                                >
+                                    <DownloadPDF data={data} />
+                                </p>
+                            </div>
                         </div>
 
                         {/* Holdings Table */}
@@ -353,7 +364,7 @@ const Dashboard = () => {
                             <HistoricalPerformance />
                         </div>
                         <div className={`p-6 rounded-xl shadow-lg my-4 ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
-                                }`}>
+                            }`}>
                             <h1 className="text-3xl font-bold mb-8">Goal Tracker</h1>
 
                             <GoalSection currentPortfolioValue={calculateTotalValue("Current Value")} darkMode={darkMode} />

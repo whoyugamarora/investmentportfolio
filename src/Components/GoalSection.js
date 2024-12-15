@@ -42,7 +42,7 @@ const GoalSection = ({ currentPortfolioValue, darkMode }) => {
               type="text"
               value={goalName}
               onChange={(e) => setGoalName(e.target.value)}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-200 text-gray-900 font-semibold`}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-gray-900 font-semibold"
               required
             />
           </div>
@@ -52,7 +52,7 @@ const GoalSection = ({ currentPortfolioValue, darkMode }) => {
               type="number"
               value={targetAmount}
               onChange={(e) => setTargetAmount(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-200 text-gray-900 font-semibold"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-gray-900 font-semibold"
               required
             />
           </div>
@@ -62,7 +62,7 @@ const GoalSection = ({ currentPortfolioValue, darkMode }) => {
               type="number"
               value={timeframe}
               onChange={(e) => setTimeframe(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-200 text-gray-900 font-semibold"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-gray-900 font-semibold"
               required
             />
           </div>
@@ -72,7 +72,7 @@ const GoalSection = ({ currentPortfolioValue, darkMode }) => {
               type="number"
               value={initialInvestment}
               onChange={(e) => setInitialInvestment(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-200 text-gray-900 font-semibold"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-gray-900 font-semibold"
               required
             />
           </div>
