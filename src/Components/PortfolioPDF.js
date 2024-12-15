@@ -5,119 +5,44 @@ import {
   View,
   Document,
   StyleSheet,
+  Image,
   PDFDownloadLink,
-  Font,
 } from "@react-pdf/renderer";
 
-// Register Roboto Font (from a reliable TTF source)
-Font.register({
-  family: "Roboto",
-  src: "https://cdnjs.cloudflare.com/ajax/libs/fontsource-roboto/300-italic.ttf",
-});
-
-// PDF Styles
+// Styles
 const styles = StyleSheet.create({
-  page: {
-    padding: 30,
-    fontSize: 12,
-    backgroundColor: "#f8f9fa", // Light gray background for the page
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 10,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "#4F46E5", // Indigo color for the title
-  },
-  subtitle: {
-    fontSize: 14,
-    textAlign: "center",
-    marginBottom: 20,
-    color: "#6c757d", // Subtle gray for the subtitle
-  },
-  section: {
-    marginBottom: 20,
-    padding: 10,
-    backgroundColor: "#ffffff", // White background for sections
-    borderRadius: 5,
-    shadowColor: "#000000",
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    shadowOffset: { width: 1, height: 1 },
-  },
-  sectionTitle: {
-    fontSize: 16,
-    marginBottom: 8,
-    fontWeight: "bold",
-    borderBottom: "2px solid #4F46E5", // Underline for section titles
-    paddingBottom: 5,
-    color: "#4F46E5",
-  },
-  tableHeader: {
-    flexDirection: "row",
-    backgroundColor: "#4F46E5", // Indigo background for the table header
-    color: "#ffffff", // White text color
-    paddingVertical: 5,
-    borderRadius: 5,
-  },
-  tableRow: {
-    flexDirection: "row",
-    borderBottom: "1px solid #dee2e6", // Light gray for row borders
-    paddingVertical: 5,
-  },
-  cell: {
-    flex: 1,
-    paddingHorizontal: 5,
-    textAlign: "center",
-    fontSize: 10,
-  },
-  cellBold: {
-    flex: 1,
-    paddingHorizontal: 5,
-    textAlign: "center",
-    fontSize: 10,
-    fontWeight: "bold",
-  },
-  footer: {
-    marginTop: 20,
-    textAlign: "center",
-    fontSize: 10,
-    color: "#6c757d",
-  },
+  page: { padding: 30, fontSize: 12, backgroundColor: "#f8f9fa" },
+  title: { fontSize: 24, marginBottom: 10, textAlign: "center", color: "#4F46E5" },
+  section: { marginBottom: 20, padding: 10, backgroundColor: "#ffffff",borderRadius: 5},
+  sectionTitle: { fontSize: 16, marginBottom: 8, borderBottom: "1px solid #4F46E5" },
+  tableHeader: {flexDirection: "row", backgroundColor: "#4F46E5", color: "#ffffff", paddingVertical: 5, borderRadius: 5,},
+  tableRow: { flexDirection: "row", borderBottom: "1px solid #ccc", paddingVertical: 5 },
+  cell: { flex: 1, textAlign: "center", fontSize: 10 },
+  chartContainer: {flex: 1, justifyContent: "center", alignItems: "center", marginVertical: 20},
+  chartImage: { width: "90%", height: "40%", marginVertical: 20, alignSelf: "center" },
 });
 
-// Portfolio PDF Document Component
-const PortfolioPDF = ({ data }) => {
+// PDF Component
+const PortfolioPDF = ({ data, chartImages }) => {
   const calculateTotalValue = (key) =>
     data.reduce((sum, item) => sum + item[key], 0).toFixed(2);
 
   return (
     <Document>
+      {/* Page 1: Portfolio Overview */}
       <Page style={styles.page}>
-        {/* Title */}
         <Text style={styles.title}>Monthly Portfolio Report</Text>
-        <Text style={styles.subtitle}>
-          Date: {new Date().toLocaleDateString()}
-        </Text>
+        <Text style={styles.subtitle}>Date: {new Date().toLocaleDateString()}</Text>
 
-        {/* Portfolio Overview Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Portfolio Overview</Text>
           <View style={styles.tableRow}>
-            <Text style={styles.cellBold}>Metric</Text>
-            <Text style={styles.cellBold}>Value</Text>
-          </View>
-          <View style={styles.tableRow}>
             <Text style={styles.cell}>Total Portfolio Value</Text>
-            <Text style={styles.cell}>
-              INR {calculateTotalValue("Current Value")}
-            </Text>
+            <Text style={styles.cell}>INR {calculateTotalValue("Current Value")}</Text>
           </View>
           <View style={styles.tableRow}>
             <Text style={styles.cell}>Total Profit/Loss</Text>
-            <Text style={styles.cell}>
-              INR {calculateTotalValue("Profit/Loss")}
-            </Text>
+            <Text style={styles.cell}>INR {calculateTotalValue("Profit/Loss")}</Text>
           </View>
           <View style={styles.tableRow}>
             <Text style={styles.cell}>Return Percentage</Text>
@@ -126,48 +51,45 @@ const PortfolioPDF = ({ data }) => {
                 (calculateTotalValue("Profit/Loss") /
                   calculateTotalValue("Buy Value")) *
                 100
-              ).toFixed(2)}
-              %
+              ).toFixed(2)}%
             </Text>
           </View>
         </View>
 
-        {/* Holdings Table Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Holdings Summary</Text>
           <View style={styles.tableHeader}>
-            <Text style={styles.cellBold}>Asset</Text>
-            <Text style={styles.cellBold}>Quantity</Text>
-            <Text style={styles.cellBold}>Current Value</Text>
-            <Text style={styles.cellBold}>Profit/Loss</Text>
+            <Text style={styles.cell}>Asset</Text>
+            <Text style={styles.cell}>Quantity</Text>
+            <Text style={styles.cell}>Current Value</Text>
+            <Text style={styles.cell}>Profit/Loss</Text>
           </View>
           {data.map((item, index) => (
             <View key={index} style={styles.tableRow}>
               <Text style={styles.cell}>{item.Company}</Text>
               <Text style={styles.cell}>{item.Quantity}</Text>
-              <Text style={styles.cell}>
-                INR {item["Current Value"].toFixed(0)}
-              </Text>
-              <Text style={styles.cell}>
-                INR {item["Profit/Loss"].toFixed(0)}
-              </Text>
+              <Text style={styles.cell}>INR {item["Current Value"].toFixed(0)}</Text>
+              <Text style={styles.cell}>INR {item["Profit/Loss"].toFixed(0)}</Text>
             </View>
           ))}
         </View>
+      </Page>
 
-        {/* Footer */}
-        <Text style={styles.footer}>
-          Generated by Portfolio Tracker © {new Date().getFullYear()}
-        </Text>
+      {/* Page 2: Charts */}
+      <Page style={styles.page}>
+      <View style={styles.chartContainer}>
+        <Image src={chartImages.pie} style={styles.chartImage} />
+        <Image src={chartImages.comparison} style={styles.chartImage} />
+        </View>
       </Page>
     </Document>
   );
 };
 
-// Export PDFDownloadLink for Button
-export const DownloadPDF = ({ data }) => (
+// Download PDF Button Component
+export const DownloadPDF = ({ data, chartImages }) => (
   <PDFDownloadLink
-    document={<PortfolioPDF data={data} />}
+    document={<PortfolioPDF data={data} chartImages={chartImages} />}
     fileName="Portfolio_Report.pdf"
     className="flex items-center justify-center py-4 px-6 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 shadow-md"
   >

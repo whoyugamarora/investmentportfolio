@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Paper } from "@mui/material";
 import PieChart from "./Components/PieChart";
@@ -12,6 +12,8 @@ import { auth } from "./Authentication/firebase";
 import { useNavigate } from "react-router-dom";
 import GoalSection from "./Components/GoalSection";
 import DownloadPDF from "./Components/PortfolioPDF";
+import { toPng } from "html-to-image";
+
 
 const Dashboard = () => {
     const [data, setData] = useState([]);
@@ -19,6 +21,9 @@ const Dashboard = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
     const [darkMode, setDarkMode] = useState(false); // State for dark mode
+    const pieChartRef = useRef(null);
+    const comparisonChartRef = useRef(null);
+    const [chartImages, setChartImages] = useState({ pie: "", comparison: "" });
 
     const GOOGLE_SHEETS_URL = process.env.REACT_APP_SPREADSHEET_URL;
     const navigate = useNavigate(); // Initialize useNavigate
@@ -67,6 +72,18 @@ const Dashboard = () => {
         const totalCurrentValue = parseFloat(calculateTotalValue("Buy Value"));
         if (totalCurrentValue === 0) return 0; // Prevent division by zero
         return ((totalProfit / totalCurrentValue) * 100).toFixed(2);
+    };
+
+    const generateChartImages = async () => {
+        try {
+            const pieImage = await toPng(pieChartRef.current, { cacheBust: true });
+            const comparisonImage = await toPng(comparisonChartRef.current, {
+                cacheBust: true,
+            });
+            setChartImages({ pie: pieImage, comparison: comparisonImage });
+        } catch (error) {
+            console.error("Error generating chart images:", error);
+        }
     };
 
     const handleSort = (key) => {
@@ -215,12 +232,13 @@ const Dashboard = () => {
                                 className={`p-6 rounded-xl shadow-sm ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
                                     }`}
                             >
-                                    <p
+                                <p
+                                    onClick={generateChartImages}
                                     className={` font-bold ${weightedPE >= 0 && weightedPE <= 50
                                         ? "text-green-600"
                                         : "text-red-600"}`}
                                 >
-                                    <DownloadPDF data={data} />
+                                    <DownloadPDF data={data} chartImages={chartImages} />
 
                                 </p>
                             </div>
@@ -298,6 +316,7 @@ const Dashboard = () => {
                         {/* Combined Chart Section and Asset Allocation */}
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-4">
                             <div
+                                ref={comparisonChartRef}
                                 className={`p-6 rounded-xl shadow-md ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
                                     }`}
                             >
@@ -307,7 +326,7 @@ const Dashboard = () => {
                                 >
                                     Portfolio vs CNX 500 (Normalized)
                                 </h2>
-                                <ComparisonChart />
+                                <ComparisonChart  />
                             </div>
 
                             {/* Asset Allocation */}
@@ -316,6 +335,7 @@ const Dashboard = () => {
                             >
                                 <Paper
                                     elevation={5}
+                                    ref={pieChartRef}
                                     style={{
                                         padding: "1rem",
                                         borderRadius: "15px",
