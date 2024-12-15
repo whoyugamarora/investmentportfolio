@@ -8,6 +8,7 @@ import {
   Image,
   PDFDownloadLink,
 } from "@react-pdf/renderer";
+import { format as formatIndianNumber } from "indian-number-format";
 
 // Styles
 const styles = StyleSheet.create({
@@ -38,11 +39,11 @@ const PortfolioPDF = ({ data, chartImages }) => {
           <Text style={styles.sectionTitle}>Portfolio Overview</Text>
           <View style={styles.tableRow}>
             <Text style={styles.cell}>Total Portfolio Value</Text>
-            <Text style={styles.cell}>INR {calculateTotalValue("Current Value")}</Text>
+            <Text style={styles.cell}>INR {(formatIndianNumber(calculateTotalValue("Current Value")))}</Text>
           </View>
           <View style={styles.tableRow}>
             <Text style={styles.cell}>Total Profit/Loss</Text>
-            <Text style={styles.cell}>INR {calculateTotalValue("Profit/Loss")}</Text>
+            <Text style={styles.cell}>INR {(formatIndianNumber(calculateTotalValue("Profit/Loss")))}</Text>
           </View>
           <View style={styles.tableRow}>
             <Text style={styles.cell}>Return Percentage</Text>
@@ -68,8 +69,8 @@ const PortfolioPDF = ({ data, chartImages }) => {
             <View key={index} style={styles.tableRow}>
               <Text style={styles.cell}>{item.Company}</Text>
               <Text style={styles.cell}>{item.Quantity}</Text>
-              <Text style={styles.cell}>INR {item["Current Value"].toFixed(0)}</Text>
-              <Text style={styles.cell}>INR {item["Profit/Loss"].toFixed(0)}</Text>
+              <Text style={styles.cell}>INR {(formatIndianNumber(item["Current Value"].toFixed(0)))}</Text>
+              <Text style={styles.cell}>INR {(formatIndianNumber(item["Profit/Loss"].toFixed(0)))}</Text>
             </View>
           ))}
         </View>
