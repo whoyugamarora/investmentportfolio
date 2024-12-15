@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import GoalSection from "./Components/GoalSection";
 import DownloadPDF from "./Components/PortfolioPDF";
 import { toPng } from "html-to-image";
+import { format as formatIndianNumber} from "indian-number-format";
 
 
 const Dashboard = () => {
@@ -64,7 +65,7 @@ const Dashboard = () => {
     };
 
     const calculateTotalValue = (key) => {
-        return data.reduce((sum, item) => sum + item[key], 0).toFixed(2);
+        return data.reduce((sum, item) => sum + item[key], 0).toFixed(0);
     };
 
     const calculateProfitPercentage = () => {
@@ -139,7 +140,7 @@ const Dashboard = () => {
                             >
                                 <h3 className="text-sm font-medium">Total Portfolio Value</h3>
                                 <p className="text-2xl font-bold">
-                                    ₹{calculateTotalValue("Current Value")}
+                                    ₹{(formatIndianNumber(calculateTotalValue("Current Value")))}
                                 </p>
                             </div>
 
@@ -151,7 +152,7 @@ const Dashboard = () => {
                                 <p
                                     className={`text-2xl font-bold`}
                                 >
-                                    {calculateTotalValue("Buy Value")}
+                                    {(formatIndianNumber(calculateTotalValue("Buy Value")))}
                                 </p>
                             </div>
 
@@ -166,7 +167,7 @@ const Dashboard = () => {
                                         : "text-red-600"
                                         }`}
                                 >
-                                    ₹{calculateTotalValue("Profit/Loss")}
+                                    ₹{(formatIndianNumber(calculateTotalValue("Profit/Loss")))}
                                 </p>
                             </div>
 
@@ -196,7 +197,7 @@ const Dashboard = () => {
                                         : "text-red-600"
                                         }`}
                                 >
-                                    {calculateTotalValue("Day Gain")}
+                                    {(formatIndianNumber(calculateTotalValue("Day Gain")))}
                                 </p>
                             </div>
 
@@ -288,7 +289,7 @@ const Dashboard = () => {
                                                     ₹{row["Buy Price"].toFixed(2)}
                                                 </td>
                                                 <td className="py-4 px-3 text-sm font-medium text-center">
-                                                    ₹{row["Current Value"].toFixed(2)}
+                                                    ₹{(formatIndianNumber(row["Current Value"].toFixed(0)))}
                                                 </td>
                                                 <td
                                                     className={`py-4 px-3 text-sm font-medium text-center ${row["Profit/Loss"] >= 0
@@ -296,7 +297,7 @@ const Dashboard = () => {
                                                         : "text-red-600"
                                                         }`}
                                                 >
-                                                    ₹{row["Profit/Loss"].toFixed(2)}
+                                                    ₹{(formatIndianNumber(row["Profit/Loss"].toFixed(0)))}
                                                 </td>
                                                 <td
                                                     className={`py-4 text-sm font-medium text-center ${row["PorLpercent"] >= 0
