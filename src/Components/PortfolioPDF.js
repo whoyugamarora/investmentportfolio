@@ -1,35 +1,88 @@
 import React from "react";
-import { Page, Text, View, Document, StyleSheet, PDFDownloadLink } from "@react-pdf/renderer";
+import {
+  Page,
+  Text,
+  View,
+  Document,
+  StyleSheet,
+  PDFDownloadLink,
+  Font,
+} from "@react-pdf/renderer";
+
+// Register Roboto Font (from a reliable TTF source)
+Font.register({
+  family: "Roboto",
+  src: "https://cdnjs.cloudflare.com/ajax/libs/fontsource-roboto/300-italic.ttf",
+});
 
 // PDF Styles
 const styles = StyleSheet.create({
   page: {
     padding: 30,
     fontSize: 12,
+    backgroundColor: "#f8f9fa", // Light gray background for the page
   },
   title: {
-    fontSize: 18,
+    fontSize: 24,
     marginBottom: 10,
     fontWeight: "bold",
+    textAlign: "center",
+    color: "#4F46E5", // Indigo color for the title
+  },
+  subtitle: {
+    fontSize: 14,
+    textAlign: "center",
+    marginBottom: 20,
+    color: "#6c757d", // Subtle gray for the subtitle
   },
   section: {
     marginBottom: 20,
+    padding: 10,
+    backgroundColor: "#ffffff", // White background for sections
+    borderRadius: 5,
+    shadowColor: "#000000",
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    shadowOffset: { width: 1, height: 1 },
+  },
+  sectionTitle: {
+    fontSize: 16,
+    marginBottom: 8,
+    fontWeight: "bold",
+    borderBottom: "2px solid #4F46E5", // Underline for section titles
+    paddingBottom: 5,
+    color: "#4F46E5",
   },
   tableHeader: {
     flexDirection: "row",
-    borderBottom: "1px solid black",
-    paddingBottom: 5,
+    backgroundColor: "#4F46E5", // Indigo background for the table header
+    color: "#ffffff", // White text color
+    paddingVertical: 5,
+    borderRadius: 5,
   },
   tableRow: {
     flexDirection: "row",
-    paddingTop: 5,
+    borderBottom: "1px solid #dee2e6", // Light gray for row borders
+    paddingVertical: 5,
   },
   cell: {
     flex: 1,
     paddingHorizontal: 5,
+    textAlign: "center",
+    fontSize: 10,
   },
-  bold: {
+  cellBold: {
+    flex: 1,
+    paddingHorizontal: 5,
+    textAlign: "center",
+    fontSize: 10,
     fontWeight: "bold",
+  },
+  footer: {
+    marginTop: 20,
+    textAlign: "center",
+    fontSize: 10,
+    color: "#6c757d",
   },
 });
 
@@ -43,42 +96,69 @@ const PortfolioPDF = ({ data }) => {
       <Page style={styles.page}>
         {/* Title */}
         <Text style={styles.title}>Monthly Portfolio Report</Text>
-        <Text>Date: {new Date().toLocaleDateString()}</Text>
+        <Text style={styles.subtitle}>
+          Date: {new Date().toLocaleDateString()}
+        </Text>
 
         {/* Portfolio Overview Section */}
         <View style={styles.section}>
-          <Text style={styles.bold}>Portfolio Overview</Text>
-          <Text>Total Portfolio Value: ₹{calculateTotalValue("Current Value")}</Text>
-          <Text>Total Profit/Loss: ₹{calculateTotalValue("Profit/Loss")}</Text>
-          <Text>
-            Return Percentage:{" "}
-            {(
-              (calculateTotalValue("Current Value") /
-                calculateTotalValue("Buy Value")) *
-              100
-            ).toFixed(2)}
-            %
-          </Text>
+          <Text style={styles.sectionTitle}>Portfolio Overview</Text>
+          <View style={styles.tableRow}>
+            <Text style={styles.cellBold}>Metric</Text>
+            <Text style={styles.cellBold}>Value</Text>
+          </View>
+          <View style={styles.tableRow}>
+            <Text style={styles.cell}>Total Portfolio Value</Text>
+            <Text style={styles.cell}>
+              INR {calculateTotalValue("Current Value")}
+            </Text>
+          </View>
+          <View style={styles.tableRow}>
+            <Text style={styles.cell}>Total Profit/Loss</Text>
+            <Text style={styles.cell}>
+              INR {calculateTotalValue("Profit/Loss")}
+            </Text>
+          </View>
+          <View style={styles.tableRow}>
+            <Text style={styles.cell}>Return Percentage</Text>
+            <Text style={styles.cell}>
+              {(
+                (calculateTotalValue("Profit/Loss") /
+                  calculateTotalValue("Buy Value")) *
+                100
+              ).toFixed(2)}
+              %
+            </Text>
+          </View>
         </View>
 
         {/* Holdings Table Section */}
         <View style={styles.section}>
-          <Text style={styles.bold}>Holdings Summary</Text>
+          <Text style={styles.sectionTitle}>Holdings Summary</Text>
           <View style={styles.tableHeader}>
-            <Text style={[styles.cell, styles.bold]}>Asset</Text>
-            <Text style={[styles.cell, styles.bold]}>Quantity</Text>
-            <Text style={[styles.cell, styles.bold]}>Current Value</Text>
-            <Text style={[styles.cell, styles.bold]}>Profit/Loss</Text>
+            <Text style={styles.cellBold}>Asset</Text>
+            <Text style={styles.cellBold}>Quantity</Text>
+            <Text style={styles.cellBold}>Current Value</Text>
+            <Text style={styles.cellBold}>Profit/Loss</Text>
           </View>
           {data.map((item, index) => (
             <View key={index} style={styles.tableRow}>
               <Text style={styles.cell}>{item.Company}</Text>
               <Text style={styles.cell}>{item.Quantity}</Text>
-              <Text style={styles.cell}>₹{item["Current Value"].toFixed(2)}</Text>
-              <Text style={styles.cell}>₹{item["Profit/Loss"].toFixed(2)}</Text>
+              <Text style={styles.cell}>
+                INR {item["Current Value"].toFixed(0)}
+              </Text>
+              <Text style={styles.cell}>
+                INR {item["Profit/Loss"].toFixed(0)}
+              </Text>
             </View>
           ))}
         </View>
+
+        {/* Footer */}
+        <Text style={styles.footer}>
+          Generated by Portfolio Tracker © {new Date().getFullYear()}
+        </Text>
       </Page>
     </Document>
   );
@@ -89,7 +169,7 @@ export const DownloadPDF = ({ data }) => (
   <PDFDownloadLink
     document={<PortfolioPDF data={data} />}
     fileName="Portfolio_Report.pdf"
-    className=" flex items-center justify-center py-4 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700"
+    className="flex items-center justify-center py-4 px-6 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 shadow-md"
   >
     {({ loading }) => (loading ? "Generating PDF..." : "Download PDF")}
   </PDFDownloadLink>

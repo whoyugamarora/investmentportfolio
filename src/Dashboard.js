@@ -11,7 +11,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "./Authentication/firebase";
 import { useNavigate } from "react-router-dom";
 import GoalSection from "./Components/GoalSection";
-import { DownloadPDF } from "./Components/PortfolioPDF";
+import DownloadPDF from "./Components/PortfolioPDF";
 
 const Dashboard = () => {
     const [data, setData] = useState([]);
@@ -215,12 +215,13 @@ const Dashboard = () => {
                                 className={`p-6 rounded-xl shadow-sm ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
                                     }`}
                             >
-                                <p
+                                    <p
                                     className={` font-bold ${weightedPE >= 0 && weightedPE <= 50
                                         ? "text-green-600"
                                         : "text-red-600"}`}
                                 >
                                     <DownloadPDF data={data} />
+
                                 </p>
                             </div>
                         </div>
