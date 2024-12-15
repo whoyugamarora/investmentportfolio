@@ -19,8 +19,9 @@ const styles = StyleSheet.create({
   tableHeader: {flexDirection: "row", backgroundColor: "#4F46E5", color: "#ffffff", paddingVertical: 5, borderRadius: 5,},
   tableRow: { flexDirection: "row", borderBottom: "1px solid #ccc", paddingVertical: 5 },
   cell: { flex: 1, textAlign: "center", fontSize: 10 },
-  chartContainer: {flex: 1, justifyContent: "center", alignItems: "center", marginVertical: 20},
-  chartImage: { width: "90%", height: "40%", marginVertical: 20, alignSelf: "center" },
+  chartContainer: {display: "flex", justifyContent: "center", alignItems: "center", rowGap: 20},
+  chartImagePie: { width: "80%", height: "40%"},
+  chartImageCompare: { width: "80%", height: "40%"}
 });
 
 // PDF Component

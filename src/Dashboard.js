@@ -152,7 +152,7 @@ const Dashboard = () => {
                                 <p
                                     className={`text-2xl font-bold`}
                                 >
-                                    {(formatIndianNumber(calculateTotalValue("Buy Value")))}
+                                    ₹{(formatIndianNumber(calculateTotalValue("Buy Value")))}
                                 </p>
                             </div>
 
