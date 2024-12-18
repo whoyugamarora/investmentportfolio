@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { format as formatIndianNumber } from "indian-number-format";
+
 
 const TodayGainers = ({ data, darkMode }) => {
     const [sortConfig, setSortConfig] = useState({ key: "daygain", direction: "desc" });
@@ -64,7 +66,7 @@ const TodayGainers = ({ data, darkMode }) => {
                                     row["Day Gain"] >= 0 ? "text-green-600" : "text-red-600"
                                 }`}
                             >
-                                ₹{row["Day Gain"].toFixed(2)}
+                                ₹{(formatIndianNumber(row["Day Gain"].toFixed(0)))}
                             </td>
                             <td
                                 className={`py-4 px-3 text-sm font-medium text-center ${
