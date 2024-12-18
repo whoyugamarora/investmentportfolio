@@ -13,7 +13,9 @@ import { useNavigate } from "react-router-dom";
 import GoalSection from "./Components/GoalSection";
 import DownloadPDF from "./Components/PortfolioPDF";
 import { toPng } from "html-to-image";
-import { format as formatIndianNumber} from "indian-number-format";
+import { format as formatIndianNumber } from "indian-number-format";
+import TodayGainers from "./Components/Todaygainers";
+import TodayLosers from "./Components/Todaylosers";
 
 
 const Dashboard = () => {
@@ -250,7 +252,7 @@ const Dashboard = () => {
                             className={`p-6 rounded-xl shadow-sm ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
                                 }`}
                         >
-                            <h2 className="text-xl font-semibold mb-6 sm:text-lg md:text-xl">
+                            <h2 className="text-xl font-semibold mb-6 sm:text-lg md:text-2xl">
                                 Holdings
                             </h2>
                             <div className="overflow-x-auto">
@@ -322,12 +324,12 @@ const Dashboard = () => {
                                     }`}
                             >
                                 <h2
-                                    className={`text-xl font-semibold pb-6 text-left ${darkMode ? "text-gray-100" : "text-gray-900"
+                                    className={`text-2xl font-semibold pb-6 text-left ${darkMode ? "text-gray-100" : "text-gray-900"
                                         }`}
                                 >
                                     Portfolio vs CNX 500 (Normalized)
                                 </h2>
-                                <ComparisonChart  />
+                                <ComparisonChart />
                             </div>
 
                             {/* Asset Allocation */}
@@ -346,7 +348,7 @@ const Dashboard = () => {
                                     }}
                                 >
                                     <h2
-                                        className={`text-xl pb-6 font-semibold text-left ${darkMode ? "text-gray-100" : "text-gray-900"
+                                        className={`text-2xl pb-6 font-semibold text-left ${darkMode ? "text-gray-100" : "text-gray-900"
                                             }`}
                                     >
                                         Portfolio Distribution
@@ -385,6 +387,37 @@ const Dashboard = () => {
                             </h1>
                             <HistoricalPerformance />
                         </div>
+
+                        {/* Today Gainers */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-4">
+                            <div
+                                ref={comparisonChartRef}
+                                className={`p-6 rounded-xl shadow-md ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
+                                    }`}
+                            >
+                                <h2
+                                    className={`text-2xl font-semibold pb-6 text-left ${darkMode ? "text-gray-100" : "text-gray-900"
+                                        }`}
+                                >
+                                    Today's Gainers
+                                </h2>
+                                <TodayGainers data={data} darkMode={darkMode} />
+                            </div>
+
+                            {/* Today Losers */}
+                            <div
+                                className={`p-6 rounded-xl shadow-md ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"}`}
+                            >
+                                <h2
+                                    className={`text-2xl pb-6 font-semibold text-left ${darkMode ? "text-gray-100" : "text-gray-900"
+                                        }`}
+                                >
+                                    Today's Losers
+                                </h2>
+                                < TodayLosers data={data} darkMode={darkMode} />
+                            </div>
+                        </div>
+
                         <div className={`p-6 rounded-xl shadow-lg my-4 ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
                             }`}>
                             <h1 className="text-3xl font-bold mb-8">Goal Tracker</h1>
