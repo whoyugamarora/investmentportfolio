@@ -107,6 +107,9 @@ const Dashboard = () => {
         navigate("/login");
     };
 
+    const comfortableCompanies = data.filter((company) => company.Valuation === "Comfortable");
+    const uncomfortableCompanies = data.filter((company) => company.Valuation === "Uncomfortable");
+
 
     return (
         <div
@@ -416,6 +419,48 @@ const Dashboard = () => {
                                 </h2>
                                 < TodayLosers data={data} darkMode={darkMode} />
                             </div>
+                        </div>
+
+                        <div className={`max-w-7xl mx-auto shadow-lg p-6 rounded-xl ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"}`}>
+                            <h1 className="text-3xl font-bold mb-8">Company Valuation</h1>
+
+                            {isLoading ? (
+                                <div className="text-center text-xl">Loading data...</div>
+                            ) : (
+                                <div className="grid grid-cols-2 gap-8">
+                                    {/* Comfortable Column */}
+                                    <div className={`p-4 rounded-md shadow-md ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"}`}>
+                                        <h2 className="text-xl font-bold mb-6">Comfortable</h2>
+                                        {comfortableCompanies.length > 0 ? (
+                                            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                {comfortableCompanies.map((company, index) => (
+                                                    <li key={index} className={`py-2 px-4 ${darkMode ? "bg-green-700" : "bg-green-100"} rounded-md text-center font-medium`}>
+                                                        {company.Company}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <p>No companies in this category.</p>
+                                        )}
+                                    </div>
+
+                                    {/* Uncomfortable Column */}
+                                    <div className={`p-4 rounded-md shadow-md ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"}`}>
+                                        <h2 className="text-xl font-bold mb-6">Uncomfortable</h2>
+                                        {uncomfortableCompanies.length > 0 ? (
+                                            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                {uncomfortableCompanies.map((company, index) => (
+                                                    <li key={index} className={`py-2 px-4 ${darkMode ? "bg-red-700" : "bg-red-100"} rounded-md text-center font-medium`}>
+                                                        {company.Company}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <p>No companies in this category.</p>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         <div className={`p-6 rounded-xl shadow-lg my-4 ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
