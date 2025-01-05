@@ -3,9 +3,9 @@ import React from "react";
 const Heatmap = ({ data }) => {
   // Function to determine background color based on profit/loss percentage
   const getColor = (percentage) => {
-    if (percentage > 0) return `rgba(34, 197, 94, ${percentage / 100})`; // Green
-    if (percentage < 0) return `rgba(239, 68, 68, ${Math.abs(percentage) / 100})`; // Red
-    return "rgba(250, 204, 21, 0.5)"; // Yellow for break-even
+    if (percentage > 0 && percentage > 10) return `rgba(34, 197, 94, ${Math.abs(percentage) / 40})`; // Green
+    if (percentage < 0 && percentage < 10) return `rgba(239, 68, 68, ${Math.abs(percentage) / 40})`; // Red
+    return "rgba(250, 170, 21, 0.9)"; // Yellow for break-even
   };
 
   return (
@@ -13,7 +13,7 @@ const Heatmap = ({ data }) => {
       {data.map((item, index) => (
         <div
           key={index}
-          className="p-4 rounded-md shadow-sm text-center text-white font-medium"
+          className="p-4 rounded-md shadow-sm text-center text-white font-semibold"
           style={{
             backgroundColor: getColor(item["PorLpercent"]),
           }}
