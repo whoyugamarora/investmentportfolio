@@ -5,7 +5,7 @@ import PieChart from "./Components/PieChart";
 import Heatmap from "./Components/Heatmap";
 import HistoricalPerformance from "./Components/historicalperformance";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSun, faMoon, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faSun, faMoon, faSpinner, faChartLine, faChartSimple } from "@fortawesome/free-solid-svg-icons";
 import ComparisonChart from "./Components/ComparisonChart";
 import { signOut } from "firebase/auth";
 import { auth } from "./Authentication/firebase";
@@ -250,239 +250,244 @@ const Dashboard = () => {
                             </div>
                         </div>
 
-                        {/* Holdings Table */}
-                        <div
-                            className={`py-6 px-4 rounded-xl shadow-sm ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
-                                }`}
-                        >
-                            <h2 className="text-xl font-semibold mb-6 sm:text-lg md:text-2xl">
-                                Holdings
-                            </h2>
-                            <div className="overflow-x-auto">
-                                <table className="w-full">
-                                    <thead>
-                                        <tr className="border-b border-gray-200">
-                                            {[
-                                                { label: "Asset", key: "Company" },
-                                                { label: "Quantity", key: "Quantity" },
-                                                { label: "Buy Price", key: "Buy Price" },
-                                                { label: "Current Price", key: "Current Price" },
-                                                { label: "Buy Value", key: "Buy Value" },
-                                                { label: "Current Value", key: "Current Value" },
-                                                { label: "Profit/Loss", key: "Profit/Loss" },
-                                                { label: "P/L %", key: "PorLpercent" },
-                                            ].map((header) => (
-                                                <th
-                                                    key={header.key}
-                                                    onClick={() => handleSort(header.key)}
-                                                    className={`text-center pb-3 text-sm font-medium cursor-pointer ${darkMode ? "text-gray-300" : "text-gray-500"
-                                                        }`}
-                                                >
-                                                    {header.label}
-                                                    {sortConfig.key === header.key &&
-                                                        (sortConfig.direction === "asc" ? " ▲" : " ▼")}
-                                                </th>
-                                            ))}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {data.map((row, index) => (
-                                            <tr key={index} className={`border-b border-gray-100 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}>
-                                                <td className="py-4 text-sm font-medium">{row.Company}</td>
-                                                <td className="py-4 px-3 text-sm text-center">
-                                                    {row["Quantity"]}
-                                                </td>
-                                                <td className="py-4 px-3 text-sm text-center">
-                                                    ₹{row["Buy Price"].toFixed(2)}
-                                                </td>
-                                                <td className="py-4 px-3 text-sm text-center">
-                                                    ₹{row["Current Price"].toFixed(2)}
-                                                </td>
-                                                <td className="py-4 px-3 text-sm font-medium text-center">
-                                                    ₹{(formatIndianNumber(row["Buy Value"].toFixed(0)))}
-                                                </td>
-                                                <td className="py-4 px-3 text-sm font-medium text-center">
-                                                    ₹{(formatIndianNumber(row["Current Value"].toFixed(0)))}
-                                                </td>
-                                                <td
-                                                    className={`py-4 px-3 text-sm font-medium text-center ${row["Profit/Loss"] >= 0
-                                                        ? "text-green-600"
-                                                        : "text-red-600"
-                                                        }`}
-                                                >
-                                                    ₹{(formatIndianNumber(row["Profit/Loss"].toFixed(0)))}
-                                                </td>
-                                                <td
-                                                    className={`py-4 text-sm font-medium text-center ${row["PorLpercent"] >= 0
-                                                        ? "text-green-600"
-                                                        : "text-red-600"
-                                                        }`}
-                                                >
-                                                    {row["PorLpercent"].toFixed(2)}%
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                 
 
-                        {/* Combined Chart Section and Asset Allocation */}
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-4">
+                            {/* Holdings Table */}
                             <div
-                                ref={comparisonChartRef}
-                                className={`p-6 rounded-xl shadow-md ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
+                                className={`py-6 px-4 rounded-xl shadow-sm ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
                                     }`}
                             >
-                                <h2
-                                    className={`text-2xl font-semibold pb-6 text-left ${darkMode ? "text-gray-100" : "text-gray-900"
-                                        }`}
-                                >
-                                    Portfolio vs CNX 500 (Normalized) - 3 Months
+                                <h2 className="text-xl font-semibold mb-6 sm:text-lg md:text-2xl">
+                                    Holdings
                                 </h2>
-                                <ComparisonChart />
+                                <div className="overflow-x-auto">
+                                    <table className="w-full">
+                                        <thead>
+                                            <tr className="border-b border-gray-200">
+                                                {[
+                                                    { label: "Asset", key: "Company" },
+                                                    { label: "Quantity", key: "Quantity" },
+                                                    { label: "Buy Price", key: "Buy Price" },
+                                                    { label: "Current Price", key: "Current Price" },
+                                                    { label: "Buy Value", key: "Buy Value" },
+                                                    { label: "Current Value", key: "Current Value" },
+                                                    { label: "Profit/Loss", key: "Profit/Loss" },
+                                                    { label: "P/L %", key: "PorLpercent" },
+                                                ].map((header) => (
+                                                    <th
+                                                        key={header.key}
+                                                        onClick={() => handleSort(header.key)}
+                                                        className={`text-center pb-3 text-sm font-medium cursor-pointer ${darkMode ? "text-gray-300" : "text-gray-500"
+                                                            }`}
+                                                    >
+                                                        {header.label}
+                                                        {sortConfig.key === header.key &&
+                                                            (sortConfig.direction === "asc" ? " ▲" : " ▼")}
+                                                    </th>
+                                                ))}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {data.map((row, index) => (
+                                                <tr key={index} className={`border-b border-gray-100 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}>
+                                                    <td className="py-4 text-sm font-medium">
+                                                        <a href={`https://www.tradingview.com/chart/?symbol=${row["Company Code"]}`} className="px-1"><FontAwesomeIcon icon={faChartLine}/> </a>
+                                                        <a href={`https://www.screener.in/company//${row["Company Code"].replace("NSE:", "")}/consolidated/`} className="px-1"> <FontAwesomeIcon icon={faChartSimple}/> </a>  
+                                                        {row.Company}</td>
+                                                    <td className="py-4 px-3 text-sm text-center">
+                                                        {row["Quantity"]}
+                                                    </td>
+                                                    <td className="py-4 px-3 text-sm text-center">
+                                                        ₹{row["Buy Price"].toFixed(2)}
+                                                    </td>
+                                                    <td className="py-4 px-3 text-sm text-center">
+                                                        ₹{row["Current Price"].toFixed(2)}
+                                                    </td>
+                                                    <td className="py-4 px-3 text-sm font-medium text-center">
+                                                        ₹{(formatIndianNumber(row["Buy Value"].toFixed(0)))}
+                                                    </td>
+                                                    <td className="py-4 px-3 text-sm font-medium text-center">
+                                                        ₹{(formatIndianNumber(row["Current Value"].toFixed(0)))}
+                                                    </td>
+                                                    <td
+                                                        className={`py-4 px-3 text-sm font-medium text-center ${row["Profit/Loss"] >= 0
+                                                            ? "text-green-600"
+                                                            : "text-red-600"
+                                                            }`}
+                                                    >
+                                                        ₹{(formatIndianNumber(row["Profit/Loss"].toFixed(0)))}
+                                                    </td>
+                                                    <td
+                                                        className={`py-4 text-sm font-medium text-center ${row["PorLpercent"] >= 0
+                                                            ? "text-green-600"
+                                                            : "text-red-600"
+                                                            }`}
+                                                    >
+                                                        {row["PorLpercent"].toFixed(2)}%
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
 
-                            {/* Asset Allocation */}
+                            {/* Combined Chart Section and Asset Allocation */}
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-4">
+                                <div
+                                    ref={comparisonChartRef}
+                                    className={`p-6 rounded-xl shadow-md ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
+                                        }`}
+                                >
+                                    <h2
+                                        className={`text-2xl font-semibold pb-6 text-left ${darkMode ? "text-gray-100" : "text-gray-900"
+                                            }`}
+                                    >
+                                        Portfolio vs CNX 500 (Normalized) - 3 Months
+                                    </h2>
+                                    <ComparisonChart />
+                                </div>
+
+                                {/* Asset Allocation */}
+                                <div
+                                    className={`rounded-xl shadow-md ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"}`}
+                                >
+                                    <Paper
+                                        elevation={5}
+                                        ref={pieChartRef}
+                                        style={{
+                                            padding: "1rem",
+                                            borderRadius: "15px",
+                                            boxShadow: "0px 0px 1px rgba(0, 0, 0, 0.1)",
+                                            textAlign: "center",
+                                            backgroundColor: darkMode ? "#1F2937" : "#FFFFFF", // Dynamically set background color
+                                        }}
+                                    >
+                                        <h2
+                                            className={`text-2xl pb-6 font-semibold text-left ${darkMode ? "text-gray-100" : "text-gray-900"
+                                                }`}
+                                        >
+                                            Portfolio Distribution
+                                        </h2>
+                                        <div
+                                            style={{
+                                                width: "100%",
+                                                height: "100%",
+                                                maxHeight: "600px",
+                                                overflow: "hidden",
+                                                backgroundColor: darkMode ? "#1F2937" : "#FFFFFF", // Match chart container to dark mode
+                                                borderRadius: "10px",
+                                            }}
+                                        >
+                                            <PieChart data={data} darkMode={darkMode} />
+                                        </div>
+                                    </Paper>
+                                </div>
+                            </div>
+
+                            {/* Additional Components */}
                             <div
-                                className={`rounded-xl shadow-md ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"}`}
+                                className={`p-6 rounded-xl shadow-lg my-4 ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
+                                    }`}
                             >
-                                <Paper
-                                    elevation={5}
-                                    ref={pieChartRef}
-                                    style={{
-                                        padding: "1rem",
-                                        borderRadius: "15px",
-                                        boxShadow: "0px 0px 1px rgba(0, 0, 0, 0.1)",
-                                        textAlign: "center",
-                                        backgroundColor: darkMode ? "#1F2937" : "#FFFFFF", // Dynamically set background color
-                                    }}
+                                <h1 className="text-3xl font-bold mb-8">Profit/Loss Heatmap</h1>
+                                <Heatmap data={data} />
+                            </div>
+
+                            <div
+                                className={`p-6 rounded-xl shadow-lg my-4 ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
+                                    }`}
+                            >
+                                <h1 className="text-3xl font-bold mb-8">
+                                    Weekly Historical Performance
+                                </h1>
+                                <HistoricalPerformance />
+                            </div>
+
+                            {/* Today Gainers */}
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-4">
+                                <div
+                                    ref={comparisonChartRef}
+                                    className={`p-6 rounded-xl shadow-md ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
+                                        }`}
+                                >
+                                    <h2
+                                        className={`text-2xl font-semibold pb-6 text-left ${darkMode ? "text-gray-100" : "text-gray-900"
+                                            }`}
+                                    >
+                                        Today's Gainers
+                                    </h2>
+                                    <TodayGainers data={data} darkMode={darkMode} />
+                                </div>
+
+                                {/* Today Losers */}
+                                <div
+                                    className={`p-6 rounded-xl shadow-md ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"}`}
                                 >
                                     <h2
                                         className={`text-2xl pb-6 font-semibold text-left ${darkMode ? "text-gray-100" : "text-gray-900"
                                             }`}
                                     >
-                                        Portfolio Distribution
+                                        Today's Losers
                                     </h2>
-                                    <div
-                                        style={{
-                                            width: "100%",
-                                            height: "100%",
-                                            maxHeight: "600px",
-                                            overflow: "hidden",
-                                            backgroundColor: darkMode ? "#1F2937" : "#FFFFFF", // Match chart container to dark mode
-                                            borderRadius: "10px",
-                                        }}
-                                    >
-                                        <PieChart data={data} darkMode={darkMode} />
-                                    </div>
-                                </Paper>
-                            </div>
-                        </div>
-
-                        {/* Additional Components */}
-                        <div
-                            className={`p-6 rounded-xl shadow-lg my-4 ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
-                                }`}
-                        >
-                            <h1 className="text-3xl font-bold mb-8">Profit/Loss Heatmap</h1>
-                            <Heatmap data={data} />
-                        </div>
-
-                        <div
-                            className={`p-6 rounded-xl shadow-lg my-4 ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
-                                }`}
-                        >
-                            <h1 className="text-3xl font-bold mb-8">
-                                Weekly Historical Performance
-                            </h1>
-                            <HistoricalPerformance />
-                        </div>
-
-                        {/* Today Gainers */}
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-4">
-                            <div
-                                ref={comparisonChartRef}
-                                className={`p-6 rounded-xl shadow-md ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
-                                    }`}
-                            >
-                                <h2
-                                    className={`text-2xl font-semibold pb-6 text-left ${darkMode ? "text-gray-100" : "text-gray-900"
-                                        }`}
-                                >
-                                    Today's Gainers
-                                </h2>
-                                <TodayGainers data={data} darkMode={darkMode} />
-                            </div>
-
-                            {/* Today Losers */}
-                            <div
-                                className={`p-6 rounded-xl shadow-md ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"}`}
-                            >
-                                <h2
-                                    className={`text-2xl pb-6 font-semibold text-left ${darkMode ? "text-gray-100" : "text-gray-900"
-                                        }`}
-                                >
-                                    Today's Losers
-                                </h2>
-                                < TodayLosers data={data} darkMode={darkMode} />
-                            </div>
-                        </div>
-
-                        <div className={`max-w-7xl mx-auto shadow-lg p-6 rounded-xl ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"}`}>
-                            <h1 className="text-3xl font-bold mb-8">Company Valuation</h1>
-
-                            {isLoading ? (
-                                <div className="text-center text-xl">Loading data...</div>
-                            ) : (
-                                <div className="grid grid-cols-2 gap-8">
-                                    {/* Comfortable Column */}
-                                    <div className={`p-4 rounded-md shadow-md ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"}`}>
-                                        <h2 className="text-xl font-bold mb-6">Comfortable</h2>
-                                        {comfortableCompanies.length > 0 ? (
-                                            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                {comfortableCompanies.map((company, index) => (
-                                                    <li key={index} className={`py-2 px-4 ${darkMode ? "bg-green-700" : "bg-green-100"} rounded-md text-center font-medium`}>
-                                                        {company.Company}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        ) : (
-                                            <p>No companies in this category.</p>
-                                        )}
-                                    </div>
-
-                                    {/* Uncomfortable Column */}
-                                    <div className={`p-4 rounded-md shadow-md ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"}`}>
-                                        <h2 className="text-xl font-bold mb-6">Uncomfortable</h2>
-                                        {uncomfortableCompanies.length > 0 ? (
-                                            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                {uncomfortableCompanies.map((company, index) => (
-                                                    <li key={index} className={`py-2 px-4 ${darkMode ? "bg-red-700" : "bg-red-100"} rounded-md text-center font-medium`}>
-                                                        {company.Company}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        ) : (
-                                            <p>No companies in this category.</p>
-                                        )}
-                                    </div>
+                                    < TodayLosers data={data} darkMode={darkMode} />
                                 </div>
-                            )}
-                        </div>
+                            </div>
 
-                        <div className={`p-6 rounded-xl shadow-lg my-4 ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
-                            }`}>
-                            <h1 className="text-3xl font-bold mb-8">Goal Tracker</h1>
+                            <div className={`max-w-7xl mx-auto shadow-lg p-6 rounded-xl ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"}`}>
+                                <h1 className="text-3xl font-bold mb-8">Company Valuation</h1>
 
-                            <GoalSection currentPortfolioValue={calculateTotalValue("Current Value")} darkMode={darkMode} />
-                        </div>
+                                {isLoading ? (
+                                    <div className="text-center text-xl">Loading data...</div>
+                                ) : (
+                                    <div className="grid grid-cols-2 gap-8">
+                                        {/* Comfortable Column */}
+                                        <div className={`p-4 rounded-md shadow-md ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"}`}>
+                                            <h2 className="text-xl font-bold mb-6">Comfortable</h2>
+                                            {comfortableCompanies.length > 0 ? (
+                                                <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    {comfortableCompanies.map((company, index) => (
+                                                        <li key={index} className={`py-2 px-4 ${darkMode ? "bg-green-700" : "bg-green-100"} rounded-md text-center font-medium`}>
+                                                            {company.Company}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            ) : (
+                                                <p>No companies in this category.</p>
+                                            )}
+                                        </div>
 
-                    </>
+                                        {/* Uncomfortable Column */}
+                                        <div className={`p-4 rounded-md shadow-md ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"}`}>
+                                            <h2 className="text-xl font-bold mb-6">Uncomfortable</h2>
+                                            {uncomfortableCompanies.length > 0 ? (
+                                                <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    {uncomfortableCompanies.map((company, index) => (
+                                                        <li key={index} className={`py-2 px-4 ${darkMode ? "bg-red-700" : "bg-red-100"} rounded-md text-center font-medium`}>
+                                                            {company.Company}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            ) : (
+                                                <p>No companies in this category.</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className={`p-6 rounded-xl shadow-lg my-4 ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
+                                }`}>
+                                <h1 className="text-3xl font-bold mb-8">Goal Tracker</h1>
+
+                                <GoalSection currentPortfolioValue={calculateTotalValue("Current Value")} darkMode={darkMode} />
+                            </div>
+
+                        </>
                 )}
+                    </div>
             </div>
-        </div>
-    );
+            );
 };
 
-export default Dashboard;
+            export default Dashboard;
