@@ -252,7 +252,7 @@ const Dashboard = () => {
 
                         {/* Holdings Table */}
                         <div
-                            className={`p-6 rounded-xl shadow-sm ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
+                            className={`py-6 px-4 rounded-xl shadow-sm ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white"
                                 }`}
                         >
                             <h2 className="text-xl font-semibold mb-6 sm:text-lg md:text-2xl">
@@ -265,8 +265,10 @@ const Dashboard = () => {
                                             {[
                                                 { label: "Asset", key: "Company" },
                                                 { label: "Quantity", key: "Quantity" },
-                                                { label: "Price", key: "Buy Price" },
-                                                { label: "Value", key: "Current Value" },
+                                                { label: "Buy Price", key: "Buy Price" },
+                                                { label: "Current Price", key: "Current Price" },
+                                                { label: "Buy Value", key: "Buy Value" },
+                                                { label: "Current Value", key: "Current Value" },
                                                 { label: "Profit/Loss", key: "Profit/Loss" },
                                                 { label: "P/L %", key: "PorLpercent" },
                                             ].map((header) => (
@@ -285,13 +287,19 @@ const Dashboard = () => {
                                     </thead>
                                     <tbody>
                                         {data.map((row, index) => (
-                                            <tr key={index} className="border-b border-gray-100">
+                                            <tr key={index} className={`border-b border-gray-100 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}>
                                                 <td className="py-4 text-sm font-medium">{row.Company}</td>
                                                 <td className="py-4 px-3 text-sm text-center">
                                                     {row["Quantity"]}
                                                 </td>
                                                 <td className="py-4 px-3 text-sm text-center">
                                                     ₹{row["Buy Price"].toFixed(2)}
+                                                </td>
+                                                <td className="py-4 px-3 text-sm text-center">
+                                                    ₹{row["Current Price"].toFixed(2)}
+                                                </td>
+                                                <td className="py-4 px-3 text-sm font-medium text-center">
+                                                    ₹{(formatIndianNumber(row["Buy Value"].toFixed(0)))}
                                                 </td>
                                                 <td className="py-4 px-3 text-sm font-medium text-center">
                                                     ₹{(formatIndianNumber(row["Current Value"].toFixed(0)))}
