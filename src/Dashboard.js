@@ -292,7 +292,7 @@ const Dashboard = () => {
                                                 <tr key={index} className={`border-b border-gray-100 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}>
                                                     <td className="py-4 text-sm font-medium">
                                                         <a href={`https://www.tradingview.com/chart/?symbol=${row["Company Code"]}`} className="px-1"><FontAwesomeIcon icon={faChartLine}/> </a>
-                                                        <a href={`https://www.screener.in/company//${row["Company Code"].replace("NSE:", "")}/consolidated/`} className="px-1"> <FontAwesomeIcon icon={faChartSimple}/> </a>  
+                                                        <a href={`https://www.screener.in/company//${row["Company Code"].replace("NSE:", "")}/consolidated/`} className="px-1"> <FontAwesomeIcon icon={faChartSimple} className="text-green-700" /> </a>  
                                                         {row.Company}</td>
                                                     <td className="py-4 px-3 text-sm text-center">
                                                         {row["Quantity"]}
