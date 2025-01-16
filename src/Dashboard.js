@@ -338,7 +338,7 @@ const Dashboard = () => {
                                     className={`text-2xl font-semibold pb-6 text-left ${darkMode ? "text-gray-100" : "text-gray-900"
                                         }`}
                                 >
-                                    Portfolio vs CNX 500 (Normalized)
+                                    Portfolio vs CNX 500 (Normalized) - 3 Months
                                 </h2>
                                 <ComparisonChart />
                             </div>
