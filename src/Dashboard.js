@@ -289,7 +289,7 @@ const Dashboard = () => {
                                         </thead>
                                         <tbody>
                                             {data.map((row, index) => (
-                                                <tr key={index} className={`border-b border-gray-100 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}>
+                                                <tr key={index} className={` ${index % 2 === 0 ? darkMode? "bg-gray-800":"bg-white" : darkMode? "bg-gray-900":"bg-gray-50"}`}>
                                                     <td className="py-4 text-sm font-medium">
                                                         <a href={`https://www.tradingview.com/chart/?symbol=${row["Company Code"]}`} className="px-1"><FontAwesomeIcon icon={faChartLine}/> </a>
                                                         <a href={`https://www.screener.in/company//${row["Company Code"].replace("NSE:", "")}/consolidated/`} className="px-1"> <FontAwesomeIcon icon={faChartSimple} className="text-green-700" /> </a>  
