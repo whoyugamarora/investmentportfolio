@@ -342,8 +342,8 @@ const Dashboard = () => {
                                         {data.map((row, index) => (
                                             <tr key={index} className={` ${index % 2 === 0 ? darkMode ? "bg-gray-800" : "bg-white" : darkMode ? "bg-gray-900" : "bg-gray-50"}`}>
                                                 <td className="py-4 text-sm font-medium">
-                                                    <a href={`https://www.tradingview.com/chart/?symbol=${row["Company Code"]}`} className="px-1"><FontAwesomeIcon icon={faChartLine} /> </a>
-                                                    <a href={`https://www.screener.in/company//${row["Company Code"].replace("NSE:", "")}/consolidated/`} className="px-1"> <FontAwesomeIcon icon={faChartSimple} className="text-green-700" /> </a>
+                                                    <a href={`https://www.tradingview.com/chart/?symbol=${row["Company Code"]}`} target="_blank" rel="noreferrer" className="px-1"><FontAwesomeIcon icon={faChartLine} /> </a>
+                                                    <a href={`https://www.screener.in/company//${row["Company Code"].replace("NSE:", "")}/consolidated/`} target="_blank" rel="noreferrer" className="px-1"> <FontAwesomeIcon icon={faChartSimple} className="text-green-700" /> </a>
                                                     {row.Company}</td>
                                                 <td className="py-4 px-3 text-sm text-center">
                                                     {row["Quantity"]}
