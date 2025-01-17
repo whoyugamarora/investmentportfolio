@@ -63,15 +63,19 @@ const PortfolioPDF = ({ data, chartImages }) => {
           <View style={styles.tableHeader}>
             <Text style={styles.cell}>Asset</Text>
             <Text style={styles.cell}>Quantity</Text>
+            <Text style={styles.cell}>Buy Value</Text>
             <Text style={styles.cell}>Current Value</Text>
             <Text style={styles.cell}>Profit/Loss</Text>
+            <Text style={styles.cell}>P/L %</Text>
           </View>
           {data.map((item, index) => (
             <View key={index} style={styles.tableRow}>
               <Text style={styles.cell}>{item.Company}</Text>
               <Text style={styles.cell}>{item.Quantity}</Text>
+              <Text style={styles.cell}>INR {(formatIndianNumber(item["Buy Value"].toFixed(0)))}</Text>
               <Text style={styles.cell}>INR {(formatIndianNumber(item["Current Value"].toFixed(0)))}</Text>
               <Text style={styles.cell}>INR {(formatIndianNumber(item["Profit/Loss"].toFixed(0)))}</Text>
+              <Text style={styles.cell}>{item["PorLpercent"].toFixed(0)}%</Text>
             </View>
           ))}
         </View>
