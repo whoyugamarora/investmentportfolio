@@ -16,6 +16,7 @@ import { toPng } from "html-to-image";
 import { format as formatIndianNumber } from "indian-number-format";
 import TodayGainers from "./Components/Todaygainers";
 import TodayLosers from "./Components/Todaylosers";
+import PieChartSector from "./Components/PieChartSector";
 
 
 const Dashboard = () => {
@@ -29,6 +30,7 @@ const Dashboard = () => {
     const [chartImages, setChartImages] = useState({ pie: "", comparison: "" });
     const [totalProfitValue, setTotalProfitValue] = useState(0);
     const [totalLossValue, setTotalLossValue] = useState(0);
+    const [selectedChart, setSelectedChart] = useState("Stocks"); // Default to "Stocks"
 
     const GOOGLE_SHEETS_URL = process.env.REACT_APP_SPREADSHEET_URL;
     const navigate = useNavigate(); // Initialize useNavigate
@@ -140,7 +142,7 @@ const Dashboard = () => {
     return (
         <div
             className={`min-h-screen ${darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-50 text-gray-900"
-                } p-8`}
+                } p-2 md:p-4 lg:p-8`}
         >
             <div className="max-w-7xl mx-auto">
                 {/* Header with Toggle */}
@@ -414,12 +416,20 @@ const Dashboard = () => {
                                         backgroundColor: darkMode ? "#1F2937" : "#FFFFFF", // Dynamically set background color
                                     }}
                                 >
-                                    <h2
-                                        className={`text-2xl pb-6 font-semibold text-left ${darkMode ? "text-gray-100" : "text-gray-900"
-                                            }`}
-                                    >
-                                        Portfolio Distribution
-                                    </h2>
+                                    <div className="flex justify-between items-center">
+                                        <h2
+                                            className={`text-2xl p-2 font-semibold self-center text-left ${darkMode ? "text-gray-100" : "text-gray-900"
+                                                }`}
+                                        >
+                                            Portfolio Distribution
+                                        </h2>
+                                        <div className="flex justify-end gap-3 flex-grow">
+                                            <button className={`py-2 px-6 shadow-lg rounded-md ${selectedChart === "Stocks" ? "bg-indigo-500 text-white" : "bg-gray-50"
+                                                }`} onClick={() => setSelectedChart("Stocks")}>Stocks</button>
+                                            <button className={`py-2 px-6 shadow-lg rounded-md ${selectedChart === "Sector" ? "bg-indigo-500 text-white" : "bg-gray-50"
+                                                }`} onClick={() => setSelectedChart("Sector")}>Sector</button>
+                                        </div>
+                                    </div>
                                     <div
                                         style={{
                                             width: "100%",
@@ -430,7 +440,11 @@ const Dashboard = () => {
                                             borderRadius: "10px",
                                         }}
                                     >
-                                        <PieChart data={data} darkMode={darkMode} />
+                                        {selectedChart === "Stocks" ? (
+                                            <PieChart data={data} darkMode={darkMode} />
+                                        ) : (
+                                            <PieChartSector data={data} darkMode={darkMode} />
+                                        )}
                                     </div>
                                 </Paper>
                             </div>
