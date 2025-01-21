@@ -437,9 +437,9 @@ const Dashboard = () => {
                                             Portfolio Distribution
                                         </h2>
                                         <div className="flex justify-end gap-3 flex-grow">
-                                            <button className={`py-2 px-6 shadow-lg rounded-md ${selectedChart === "Stocks" ? "bg-indigo-500 text-white" : "bg-gray-50"
+                                            <button className={`py-2 px-3 md:px-6 shadow-lg rounded-md ${selectedChart === "Stocks" ? "bg-indigo-500 text-white" : "bg-gray-50"
                                                 }`} onClick={() => setSelectedChart("Stocks")}>Stocks</button>
-                                            <button className={`py-2 px-6 shadow-lg rounded-md ${selectedChart === "Sector" ? "bg-indigo-500 text-white" : "bg-gray-50"
+                                            <button className={`py-2 px-3 md:px-6 shadow-lg rounded-md ${selectedChart === "Sector" ? "bg-indigo-500 text-white" : "bg-gray-50"
                                                 }`} onClick={() => setSelectedChart("Sector")}>Sector</button>
                                         </div>
                                     </div>
