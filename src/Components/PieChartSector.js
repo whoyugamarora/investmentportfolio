@@ -11,17 +11,24 @@ const PieChartSector = ({ data, darkMode }) => {
         acc[Sector] = (acc[Sector] || 0) + Number(currentValue || 0);
         return acc;
     }, {});
-    
+
+    const sortedDataArray = Object.entries(consolidatedData).sort(
+        ([sectorA, valueA], [sectorB, valueB]) => valueB - valueA
+    );
+
+    // Convert back to an object if necessary
+    const sortedConsolidatedData = Object.fromEntries(sortedDataArray);
+
 
     const totalValue = Object.values(consolidatedData).reduce((sum, value) => sum + value, 0);
 
     // Convert the consolidated object into chart data
     const chartData = {
-        labels: Object.keys(consolidatedData), // Sectors
+        labels: Object.keys(sortedConsolidatedData), // Sectors
         datasets: [
             {
                 label: "Current Value Distribution",
-                data: Object.values(consolidatedData), // Summed up values
+                data: Object.values(sortedConsolidatedData), // Summed up values
                 backgroundColor: [
                     "#FF6384",
                     "#36A2EB",
