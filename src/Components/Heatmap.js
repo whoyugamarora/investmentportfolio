@@ -13,7 +13,7 @@ const Heatmap = ({ data }) => {
       {data.map((item, index) => (
         <div
           key={index}
-          className="p-4 rounded-md shadow-sm text-center text-white font-semibold"
+          className="p-4 rounded-md shadow-sm text-center text-white font-semibold flex flex-col items-center justify-center" 
           style={{
             backgroundColor: getColor(item["PorLpercent"]),
           }}

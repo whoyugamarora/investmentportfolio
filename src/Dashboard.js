@@ -158,16 +158,16 @@ const Dashboard = () => {
         >
             <div className="max-w-7xl mx-auto">
                 {/* Header with Toggle */}
-                <div className="flex justify-between items-center w-full">
-                    <h1 className="text-3xl font-bold mb-8">Portfolio Tracker</h1>
-                    <div className="w-40 flex items-center justify-center gap-8">
+                <div className="flex justify-between items-center gap-1 mb-6 w-full">
+                    <h1 className="text-2xl lg:text-3xl font-bold">Portfolio Tracker</h1>
+                    <div className="w-30 lg:w-40 flex items-center justify-center gap-8">
                         <button
                             onClick={() => setDarkMode(!darkMode)}
-                            className="text-xl focus:outline-none mb-8"
+                            className="text-xl focus:outline-none"
                         >
                             <FontAwesomeIcon icon={darkMode ? faSun : faMoon} size="lg" color={darkMode ? "yellow" : "orange"} />
                         </button>
-                        <button className=" mb-8 px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 transition-all duration-200" onClick={handleLogout}>Logout</button>
+                        <button className=" px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 transition-all duration-200" onClick={handleLogout}>Logout</button>
                     </div>
                 </div>
 
