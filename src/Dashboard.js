@@ -40,11 +40,22 @@ const Dashboard = () => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(GOOGLE_SHEETS_URL);
-                setData(response.data);
-                calculateWeightedPE(response.data); // Calculate Weighted P/E after fetching data
+                const cleanedData = response.data.map((item) => ({
+                    ...item,
+                    "Current Value": Number(item["Current Value"] || 0),
+                    "Profit/Loss": Number(item["Profit/Loss"] || 0),
+                    "Buy Value": Number(item["Buy Value"] || 0),
+                    "Quantity": Number(item["Quantity"] || 0),
+                    "PE": Number(item["PE"] || 0),
+                    "PorLpercent": !isNaN(Number(item["PorLpercent"])) ? Number(item["PorLpercent"]) : 0, // Default invalid values to 0
+                    "Day Gain": !isNaN(Number(item["Day Gain"])) ? Number(item["Day Gain"]) : 0, // Ensure valid numbers
+                    // Ensure all other numeric fields are converted
+                }));
+                setData(cleanedData);
+                calculateWeightedPE(cleanedData);
+                calculatetotalprofit(cleanedData);
+                calculatetotalloss(cleanedData);
                 setIsLoading(false);
-                calculatetotalprofit(response.data);
-                calculatetotalloss(response.data);
             } catch (error) {
                 console.error("Error fetching data:", error);
                 setIsLoading(false);
@@ -75,12 +86,12 @@ const Dashboard = () => {
     const calculatetotalprofit = (data) => {
         let totalValue = 0;
         data.forEach((stock) => {
-            const stockProfit = stock["Profit/Loss"];
+            const stockProfit = Number(stock["Profit/Loss"] || 0);
             if (stockProfit >= 0) {
                 totalValue += stockProfit;
             }
         });
-        setTotalProfitValue((totalValue).toFixed(0));
+        setTotalProfitValue(totalValue.toFixed(0));
     };
 
     const calculatetotalloss = (data) => {
@@ -95,8 +106,9 @@ const Dashboard = () => {
     };
 
     const calculateTotalValue = (key) => {
-        return data.reduce((sum, item) => sum + item[key], 0).toFixed(0);
+        return data.reduce((sum, item) => sum + Number(item[key] || 0), 0).toFixed(0);
     };
+
 
     const calculateProfitPercentage = () => {
         const totalProfit = parseFloat(calculateTotalValue("Profit/Loss"));
@@ -351,10 +363,10 @@ const Dashboard = () => {
                                                     {row["Quantity"]}
                                                 </td>
                                                 <td className="py-4 px-3 text-sm text-center">
-                                                    ₹{row["Buy Price"].toFixed(2)}
+                                                    ₹{Number(row["Buy Price"] || 0).toFixed(2)}
                                                 </td>
                                                 <td className="py-4 px-3 text-sm text-center">
-                                                    ₹{row["Current Price"].toFixed(2)}
+                                                    ₹{Number(row["Current Price"] || 0).toFixed(2)}
                                                 </td>
                                                 <td className="py-4 px-3 text-sm font-medium text-center">
                                                     ₹{(formatIndianNumber(row["Buy Value"].toFixed(0)))}
@@ -371,13 +383,14 @@ const Dashboard = () => {
                                                     ₹{(formatIndianNumber(row["Profit/Loss"].toFixed(0)))}
                                                 </td>
                                                 <td
-                                                    className={`py-4 text-sm font-medium text-center ${row["PorLpercent"] >= 0
+                                                    className={`py-4 text-sm font-medium text-center ${Number(row["PorLpercent"]) >= 0
                                                         ? "text-green-600"
                                                         : "text-red-600"
                                                         }`}
                                                 >
-                                                    {row["PorLpercent"].toFixed(2)}%
+                                                    {Number(row.PorLpercent || 0).toFixed(2)}%
                                                 </td>
+
                                             </tr>
                                         ))}
                                     </tbody>

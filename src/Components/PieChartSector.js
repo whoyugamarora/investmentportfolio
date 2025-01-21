@@ -8,16 +8,10 @@ const PieChartSector = ({ data, darkMode }) => {
     // Consolidate data by sector
     const consolidatedData = data.reduce((acc, item) => {
         const { Sector, "Current Value": currentValue } = item;
-
-        // Check if the sector already exists in the accumulator
-        if (acc[Sector]) {
-            acc[Sector] += currentValue; // Add to the existing value
-        } else {
-            acc[Sector] = currentValue; // Initialize the sector with the current value
-        }
-
+        acc[Sector] = (acc[Sector] || 0) + Number(currentValue || 0);
         return acc;
     }, {});
+    
 
     const totalValue = Object.values(consolidatedData).reduce((sum, value) => sum + value, 0);
 
