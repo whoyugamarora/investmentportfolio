@@ -5,7 +5,7 @@ import PieChart from "./Components/PieChart";
 import Heatmap from "./Components/Heatmap";
 import HistoricalPerformance from "./Components/historicalperformance";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSun, faMoon, faSpinner, faChartLine, faChartSimple } from "@fortawesome/free-solid-svg-icons";
+import { faSun, faMoon, faSpinner, faChartLine, faChartSimple, faHome, faSignOut } from "@fortawesome/free-solid-svg-icons";
 import ComparisonChart from "./Components/ComparisonChart";
 import { signOut } from "firebase/auth";
 import { auth } from "./Authentication/firebase";
@@ -160,14 +160,20 @@ const Dashboard = () => {
                 {/* Header with Toggle */}
                 <div className="flex justify-between items-center gap-1 mb-6 w-full">
                     <h1 className="text-2xl lg:text-3xl font-bold">Portfolio Tracker</h1>
-                    <div className="w-30 lg:w-40 flex items-center justify-center gap-8">
+                    <div className="w-30 lg:w-40 my-1 flex items-center justify-center gap-8">
                         <button
                             onClick={() => setDarkMode(!darkMode)}
-                            className="text-xl focus:outline-none"
+                            className="px-4 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg shadow-md hover:bg-yellow-600 transition-all duration-200"
                         >
-                            <FontAwesomeIcon icon={darkMode ? faSun : faMoon} size="lg" color={darkMode ? "yellow" : "orange"} />
+                            <FontAwesomeIcon icon={darkMode ? faSun : faMoon} size="lg" color={darkMode ? "white" : "white"} />
                         </button>
-                        <button className=" px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 transition-all duration-200" onClick={handleLogout}>Logout</button>
+                        <button
+                            onClick={() => navigate("/home")}
+                            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-200"
+                        >
+                            <FontAwesomeIcon icon={faHome} size="lg" />
+                        </button>
+                        <button className=" px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 transition-all duration-200" onClick={handleLogout}><FontAwesomeIcon icon={faSignOut} size="lg"/>  </button>
                     </div>
                 </div>
 

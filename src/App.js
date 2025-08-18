@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./Authentication/firebase";
 import Dashboard from "./Dashboard";
+import Home from "./Home";
+import Research from "./Research";
 import Login from "./Authentication/Login";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
@@ -33,13 +35,22 @@ const App = () => {
           element={user ? <Dashboard /> : <Navigate to="/login" />}
         />
         <Route
-          path="/login"
-          element={!user ? <Login /> : <Navigate to="/dashboard" />}
+          path="/research"
+          element={user ? <Research /> : <Navigate to="/login" />}
         />
-        {/* Redirect root to login or dashboard based on auth */}
+        <Route
+          path="/login"
+          element={!user ? <Login /> : <Navigate to="/home" />}
+        />
+        {/* Home page for choosing Dashboard or Research */}
+        <Route
+          path="/home"
+          element={user ? <Home /> : <Navigate to="/login" />}
+        />
+        {/* Redirect root to home or login based on auth */}
         <Route
           path="/"
-          element={user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />}
+          element={user ? <Navigate to="/home" /> : <Navigate to="/login" />}
         />
       </Routes>
     </Router>
