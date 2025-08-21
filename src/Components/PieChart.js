@@ -5,6 +5,24 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const PieChart = ({ data, darkMode }) => {
+
+  // Consolidate data by sector
+    const consolidatedData = data.reduce((acc, item) => {
+        const { Sector, "Current Value": currentValue } = item;
+        acc[Sector] = (acc[Sector] || 0) + Number(currentValue || 0);
+        return acc;
+    }, {});
+
+    const sortedDataArray = Object.entries(consolidatedData).sort(
+        ([sectorA, valueA], [sectorB, valueB]) => valueB - valueA
+    );
+
+    // Convert back to an object if necessary
+    const sortedConsolidatedData = Object.fromEntries(sortedDataArray);
+
+
+    const totalValue = Object.values(consolidatedData).reduce((sum, value) => sum + value, 0);
+
   const chartData = {
     labels: data.map((item) => item.Company),
     datasets: [
@@ -40,6 +58,13 @@ const PieChart = ({ data, darkMode }) => {
         },
       },
       tooltip: {
+        callbacks: {
+                    label: function (tooltipItem) {
+                        const value = tooltipItem.raw; // Current value
+                        const percentage = ((value / totalValue) * 100).toFixed(2); // Calculate percentage
+                        return `Value: INR ${value.toLocaleString()} (${percentage}%)`;
+                    },
+                },
         backgroundColor: darkMode ? "#333333" : "#FFFFFF", // Tooltip background color
         titleColor: darkMode ? "#FFFFFF" : "#000000", // Tooltip title color
         bodyColor: darkMode ? "#FFFFFF" : "#000000", // Tooltip body color

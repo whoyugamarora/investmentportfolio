@@ -1,4 +1,4 @@
-import { faSun, faMoon, faHome, faSignOut } from "@fortawesome/free-solid-svg-icons";
+import { faSun, faMoon, faHome, faSignOut, faChartLine, faChartSimple } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -44,17 +44,23 @@ const Research = () => {
         // Only apply color scale to "Star Rating" column
         if (header.toLowerCase().includes("star") && typeof value === "number") {
             // Assuming Star Rating is between 0 and 5
-            if (value >= 4.5) return "bg-green-400 text-white font-bold";
-            if (value >= 3.5) return "bg-green-200 text-green-900 font-semibold";
-            if (value >= 2.5) return "bg-yellow-200 text-yellow-900 font-semibold";
-            if (value >= 1.5) return "bg-orange-200 text-orange-900 font-semibold";
+            if (value >= 4) return "bg-green-300 text-green-900 font-semibold";
+            if (value >= 3) return "bg-green-200 text-green-900 font-semibold";
+            if (value >= 2) return "bg-yellow-200 text-yellow-900 font-semibold";
+            if (value >= 1) return "bg-orange-200 text-orange-900 font-semibold";
             return "bg-red-200 text-red-900 font-bold";
         }
 
         if (header.toLowerCase().includes("in portfolio?") && typeof value === "string") {
             // Assuming Star Rating is between 0 and 5
-            if (value == "Yes") return "bg-green-200 text-green-900 font-semibold";
-            if (value == "No") return "bg-orange-200 text-orange-900 font-semibold";
+            if (value === "Yes") return "bg-green-200 text-green-900 font-semibold";
+            if (value === "No") return "bg-orange-200 text-orange-900 font-semibold";
+        }
+
+        if (header.toLowerCase().includes("is current price lower?") && typeof value === "string") {
+            // Assuming Star Rating is between 0 and 5
+            if (value === "Yes") return "bg-green-200 text-green-900 font-semibold";
+            if (value === "No") return "bg-orange-200 text-orange-900 font-semibold";
         }
         // No formatting for other columns
         return "";
@@ -132,7 +138,6 @@ const Research = () => {
                     </div>
                 </div>
 
-                <h1 className="text-3xl font-bold mb-4">Research Data</h1>
                 {isLoading ? (
                     <div className="flex justify-center items-center h-64">
                         <span className="text-xl font-semibold">Loading...</span>
@@ -177,9 +182,14 @@ const Research = () => {
                                                 key={header}
                                                 className={`px-6 py-4 whitespace-nowrap text-sm border-b ${getCellStyle(header, row[header])}`}
                                             >
+                                                
                                                 {formatCellValue(header, row[header])}
                                             </td>
                                         ))}
+                                        <div className="flex items-center justify-center px-6 py-4">
+                                        <a href={`https://www.tradingview.com/chart/?symbol=${row["Company Code"]}`} target="_blank" rel="noreferrer" className="px-1"><FontAwesomeIcon icon={faChartLine} /> </a>
+                                        <a href={`https://www.screener.in/company//${row["Company Code"].replace("NSE:", "")}/consolidated/`} target="_blank" rel="noreferrer" className="px-1"> <FontAwesomeIcon icon={faChartSimple} className="text-green-700" /> </a>
+                                        </div>
                                     </tr>
                                 ))}
                             </tbody>
