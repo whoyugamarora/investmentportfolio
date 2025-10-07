@@ -1,30 +1,43 @@
+// App.jsx
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./Authentication/firebase";
-import Dashboard from "./Dashboard";
-import Home from "./Home";
-import Research from "./Research";
+import Dashboard from "./pages/Dashboard";
+import Research from "./pages/Research";
 import Login from "./Authentication/Login";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import XirrPage from "./pages/XirrPage";
+import GoalProjections from "./pages/GoalProjections";
+import ShareManager from "./pages/ShareManager";
+import PublicShare from "./pages/PublicShare";
+import Insights from "./pages/Insights";
+
+function RequireAuth({ user, children }) {
+  const location = useLocation();
+  if (!user) return <Navigate to="/login" state={{ from: location }} replace />;
+  return children;
+}
 
 const App = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false); // Stop showing loader once auth state is resolved
+    const unsub = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+      setLoading(false);
     });
-
-    return () => unsubscribe(); // Cleanup subscription
+    return () => unsub();
   }, []);
 
   if (loading) {
-    // Show a loader while determining the auth state
-    return <div className="flex justify-center items-center h-screen"><FontAwesomeIcon icon={faSpinner} className="fa-spin"/></div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <FontAwesomeIcon icon={faSpinner} className="fa-spin" />
+      </div>
+    );
   }
 
   return (
@@ -32,26 +45,55 @@ const App = () => {
       <Routes>
         <Route
           path="/dashboard"
-          element={user ? <Dashboard /> : <Navigate to="/login" />}
+          element={
+            <RequireAuth user={user}>
+              <Dashboard />
+            </RequireAuth>
+          }
         />
         <Route
           path="/research"
-          element={user ? <Research /> : <Navigate to="/login" />}
+          element={
+            <RequireAuth user={user}>
+              <Research />
+            </RequireAuth>
+          }
         />
+        <Route
+          path="/xirr"
+          element={
+            <RequireAuth user={user}>
+              <XirrPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/goals"
+          element={
+            <RequireAuth user={user}>
+              <GoalProjections />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/insights"
+          element={
+            <RequireAuth user={user}>
+              <Insights />
+            </RequireAuth>
+          }
+        />
+        <Route path="/share" element={<ShareManager />} />
+        <Route path="/s/:id" element={<PublicShare />} />
         <Route
           path="/login"
-          element={!user ? <Login /> : <Navigate to="/home" />}
+          element={!user ? <Login /> : <Navigate to="/dashboard" replace />}
         />
-        {/* Home page for choosing Dashboard or Research */}
-        <Route
-          path="/home"
-          element={user ? <Home /> : <Navigate to="/login" />}
-        />
-        {/* Redirect root to home or login based on auth */}
         <Route
           path="/"
-          element={user ? <Navigate to="/home" /> : <Navigate to="/login" />}
+          element={user ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />}
         />
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Router>
   );

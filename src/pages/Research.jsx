@@ -3,8 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { auth } from "./Authentication/firebase";
+import { auth } from "../Authentication/firebase";
 import axios from "axios";
+import SiteHeader from "../Components/SiteHeader";
 
 const Research = () => {
     const [darkMode, setDarkMode] = useState(false);
@@ -112,92 +113,77 @@ const Research = () => {
     };
 
     return (
-        <div className={`min-h-screen ${darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-50 text-gray-900"} p-2 md:p-4 lg:p-8`}>
-            <div className="max-w-7xl mx-auto">
-                <div className="flex justify-around items-center gap-8 mb-6">
-                    <h1 className="text-2xl lg:text-3xl font-bold">Research Page</h1>
-                    <div className="w-30 lg:w-40 my-1 flex items-center justify-center gap-8">
-                        <button
-                            onClick={() => setDarkMode(!darkMode)}
-                            className="px-4 py-2 text-sm font-medium text-white bg-yellow-500 rounded-lg shadow-md hover:bg-yellow-600 transition-all duration-200"
-                        >
-                            <FontAwesomeIcon icon={darkMode ? faSun : faMoon} size="lg" color="white" />
-                        </button>
-                        <button
-                            onClick={() => navigate("/home")}
-                            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-200"
-                        >
-                            <FontAwesomeIcon icon={faHome} size="lg" />
-                        </button>
-                        <button
-                            className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 transition-all duration-200"
-                            onClick={handleLogout}
-                        >
-                            <FontAwesomeIcon icon={faSignOut} size="lg" />
-                        </button>
-                    </div>
-                </div>
+        <div className={`min-h-screen ${darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-50 text-gray-900"} `}>
+            <div className="">
+                <SiteHeader
+                    title="Portfolio Tracker"
+                    darkMode={darkMode}
+                    onToggleDarkMode={() => setDarkMode((v) => !v)}
+                    onLogout={handleLogout}
+                />
+            </div>
 
-                {isLoading ? (
-                    <div className="flex justify-center items-center h-64">
-                        <span className="text-xl font-semibold">Loading...</span>
-                    </div>
-                ) : error ? (
-                    <div className="text-red-600 text-center">{error}</div>
-                ) : (
-                    <div className="overflow-x-auto rounded-2xl shadow-lg border border-gray-200">
-                        <table className={`min-w-full rounded-2xl ${darkMode ? "bg-gray-800" : "bg-white"}`}>
-                            <thead className="sticky top-0 z-10">
-                                <tr>
-                                    {headers.map((header) => (
-                                        <th
-                                            key={header}
-                                            onClick={() => handleSort(header)}
-                                            className={`px-6 py-3 text-left text-xs font-bold uppercase tracking-wider border-b cursor-pointer select-none ${darkMode ? "bg-gray-700 text-gray-200 hover:bg-gray-600" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
-                                        >
-                                            <span className="flex items-center gap-1">
-                                                {header}
-                                                {sortConfig.key === header && (
-                                                    <span>
-                                                        {sortConfig.direction === "asc" ? "▲" : "▼"}
-                                                    </span>
-                                                )}
-                                            </span>
-                                        </th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {sortedData.map((row, idx) => (
-                                    <tr
-                                        key={idx}
-                                        className={`transition-colors duration-150 hover:bg-yellow-50 dark:hover:bg-gray-700 ${
-                                            idx % 2 === 0
-                                                ? darkMode ? "bg-gray-900" : "bg-white"
-                                                : darkMode ? "bg-gray-800" : "bg-gray-50"
-                                        }`}
+            <div className="max-w-7xl mx-auto py-4">
+
+            {isLoading ? (
+                <div className="flex justify-center items-center h-64">
+                    <span className="text-xl font-semibold">Loading...</span>
+                </div>
+            ) : error ? (
+                <div className="text-red-600 text-center">{error}</div>
+            ) : (
+                <div className="overflow-x-auto rounded-2xl shadow-lg border border-gray-200">
+                    <table className={`min-w-full rounded-2xl ${darkMode ? "bg-gray-800" : "bg-white"}`}>
+                        <thead className="sticky top-0 z-10">
+                            <tr>
+                                {headers.map((header) => (
+                                    <th
+                                        key={header}
+                                        onClick={() => handleSort(header)}
+                                        className={`px-6 py-3 text-left text-xs font-bold uppercase tracking-wider border-b cursor-pointer select-none ${darkMode ? "bg-gray-700 text-gray-200 hover:bg-gray-600" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
                                     >
-                                        {headers.map((header) => (
-                                            <td
-                                                key={header}
-                                                className={`px-6 py-4 whitespace-nowrap text-sm border-b ${getCellStyle(header, row[header])}`}
-                                            >
-                                                
-                                                {formatCellValue(header, row[header])}
-                                            </td>
-                                        ))}
-                                        <div className="flex items-center justify-center px-6 py-4">
+                                        <span className="flex items-center gap-1">
+                                            {header}
+                                            {sortConfig.key === header && (
+                                                <span>
+                                                    {sortConfig.direction === "asc" ? "▲" : "▼"}
+                                                </span>
+                                            )}
+                                        </span>
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {sortedData.map((row, idx) => (
+                                <tr
+                                    key={idx}
+                                    className={`transition-colors duration-150 hover:bg-yellow-50 dark:hover:bg-gray-700 ${idx % 2 === 0
+                                        ? darkMode ? "bg-gray-900" : "bg-white"
+                                        : darkMode ? "bg-gray-800" : "bg-gray-50"
+                                        }`}
+                                >
+                                    {headers.map((header) => (
+                                        <td
+                                            key={header}
+                                            className={`px-6 py-4 whitespace-nowrap text-sm border-b ${getCellStyle(header, row[header])}`}
+                                        >
+
+                                            {formatCellValue(header, row[header])}
+                                        </td>
+                                    ))}
+                                    <div className="flex items-center justify-center px-6 py-4">
                                         <a href={`https://www.tradingview.com/chart/?symbol=${row["Company Code"]}`} target="_blank" rel="noreferrer" className="px-1"><FontAwesomeIcon icon={faChartLine} /> </a>
                                         <a href={`https://www.screener.in/company//${row["Company Code"].replace("NSE:", "")}/consolidated/`} target="_blank" rel="noreferrer" className="px-1"> <FontAwesomeIcon icon={faChartSimple} className="text-green-700" /> </a>
-                                        </div>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-            </div>
+                                    </div>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
         </div>
+        </div >
     );
 };
 

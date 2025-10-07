@@ -9,6 +9,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import axios from "axios";
+import { format as formatIndianNumber } from "indian-number-format";
+
 
 const HISTORICAL_PERFORMANCE_URL = process.env.REACT_APP_HISTORICAL_PERFORMANCE_URL;
 
@@ -47,26 +49,27 @@ const HistoricalPerformance = () => {
 
 
   const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-      const date = payload[0].payload.Date.slice(0, 10); // Format the Date
-      const value = `₹${payload[0].value.toLocaleString()}`; // Format the Value
+  if (active && payload && payload.length) {
+    const date = String(payload[0]?.payload?.Date ?? "").slice(0, 10);
+    const raw = Number(payload[0]?.value ?? 0);
+    const value = `₹${formatIndianNumber(raw.toFixed(0))}`; // use Indian format
 
-      return (
-        <div
-          style={{
-            backgroundColor: "#fff",
-            padding: "10px",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
-          }}
-        >
-          <p style={{ color: "#4F46E5", fontWeight: "bold" }}>{`${date} : ${value}`}</p>
-        </div>
-      );
-    }
+    return (
+      <div
+        style={{
+          backgroundColor: "#fff",
+          padding: "10px",
+          borderRadius: "5px",
+          border: "1px solid #ccc",
+        }}
+      >
+        <p style={{ color: "#4F46E5", fontWeight: "bold" }}>{`${date} : ${value}`}</p>
+      </div>
+    );
+  }
+  return null;
+};
 
-    return null;
-  };
 
   return (
     <div style={{ width: "100%", height: "auto" }}>

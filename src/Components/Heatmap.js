@@ -3,8 +3,8 @@ import React from "react";
 const Heatmap = ({ data }) => {
   // Function to determine background color based on profit/loss percentage
   const getColor = (percentage) => {
-    if (percentage > 0 && percentage > 10) return `rgba(34, 197, 94, ${Math.abs(percentage) / 40})`; // Green
-    if (percentage < 0 && percentage < -10) return `rgba(239, 68, 68, ${Math.abs(percentage) / 40})`; // Red
+    if (percentage > 0 ) return `rgba(34, 197, 94, ${Math.abs(percentage)/2.5 })`; // Green
+    if (percentage < 0 ) return `rgba(239, 68, 68, ${Math.abs(percentage)/2.5 })`; // Red
     return "rgba(250, 170, 21, 0.9)"; // Yellow for break-even
   }; 
 
