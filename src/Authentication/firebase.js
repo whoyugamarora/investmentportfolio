@@ -1,35 +1,38 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+// src/Authentication/firebase.js
+
+// --- Core Firebase SDK imports ---
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { initializeFirestore, persistentLocalCache  } from "firebase/firestore";
+import {
+  initializeFirestore,
+  persistentLocalCache,
+  // persistentMultipleTabManager, // uncomment if you want multi-tab persistence
+} from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
-
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
+// --- Firebase config ---
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API,
   authDomain: "investment-portfolio-tra-8dce1.firebaseapp.com",
   projectId: "investment-portfolio-tra-8dce1",
   storageBucket: "investment-portfolio-tra-8dce1.firebasestorage.app",
   messagingSenderId: "655180529759",
-  appId: "1:655180529759:web:96e51aafde0a6db0b1dbea"
+  appId: "1:655180529759:web:96e51aafde0a6db0b1dbea",
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+// --- Initialize (safe for hot reload) ---
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
-// Firestore with offline cache
-const db = initializeFirestore(app, {
-  // If you need multi-tab persistence, use:
-  // localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
+// --- Firestore with local cache ---
+export const db = initializeFirestore(app, {
   localCache: persistentLocalCache(),
+  // For multi-tab persistence, use:
+  // localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
 });
 
-export { db };
+// --- Auth & Storage ---
+export const auth = getAuth(app);
+export const storage = getStorage(app);
 
-// If you ever decide to skip persistence, use this instead (but not both):
-// import { getFirestore } from "firebase/firestore";
-// export const db = getFirestore(app);
+// --- Export app (optional, if needed elsewhere) ---
+export { app };

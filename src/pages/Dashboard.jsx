@@ -421,8 +421,8 @@ const Dashboard = () => {
                                                         >
                                                             <FontAwesomeIcon icon={faChartSimple} />
                                                         </a>
-                                                        <Link to={`/holding/${row.Company}?pid=${encodeURIComponent(pid)}`} className="text-blue-600 underline">
-                                                            <FontAwesomeIcon icon={faClipboard} className="text-black mx-2" />
+                                                        <Link to={`/holding/${row.Company}?pid=${encodeURIComponent(pid)}`}>
+                                                            <FontAwesomeIcon icon={faClipboard} className={`mx-2 ${dark ? "text-white" : "text-black"}`} />
                                                         </Link>
                                                         <span className="ml-1">{row.Company}</span>
                                                     </td>
@@ -518,7 +518,7 @@ const Dashboard = () => {
                                 <Heatmap data={data} />
                             </Section>
 
-                            <Section dark={dark} title="Weekly Historical Performance">
+                            <Section className="" dark={dark} >
                                 <HistoricalPerformance />
                             </Section>
                         </div>
