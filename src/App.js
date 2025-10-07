@@ -13,6 +13,7 @@ import GoalProjections from "./pages/GoalProjections";
 import ShareManager from "./pages/ShareManager";
 import PublicShare from "./pages/PublicShare";
 import Insights from "./pages/Insights";
+import HoldingDetail from "./pages/HoldingDetail";
 
 function RequireAuth({ user, children }) {
   const location = useLocation();
@@ -83,6 +84,14 @@ const App = () => {
             </RequireAuth>
           }
         />
+        <Route 
+          path="/holding/:symbol"
+          element={
+            <RequireAuth user={user}> 
+              <HoldingDetail pid="default" />
+            </RequireAuth>
+          } />
+
         <Route path="/share" element={<ShareManager />} />
         <Route path="/s/:id" element={<PublicShare />} />
         <Route

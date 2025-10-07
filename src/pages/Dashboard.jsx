@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, } from "react";
 import axios from "axios";
 import { Paper } from "@mui/material";
 import PieChart from "../Components/PieChart";
 import Heatmap from "../Components/Heatmap";
 import HistoricalPerformance from "../Components/historicalperformance";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link, useSearchParams } from "react-router-dom";
 import {
     faSpinner,
     faChartLine,
@@ -15,6 +16,7 @@ import {
     faSackDollar,
     faMoneyBillWave,
     faPercent,
+    faClipboard,
 } from "@fortawesome/free-solid-svg-icons";
 import ComparisonChart from "../Components/ComparisonChart";
 import { signOut } from "firebase/auth";
@@ -137,6 +139,9 @@ const Dashboard = () => {
     const GOOGLE_SHEETS_URL = process.env.REACT_APP_SPREADSHEET_URL;
     const navigate = useNavigate();
 
+    const [sp] = useSearchParams();
+    const pid = sp.get("pid") || "default";
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -258,7 +263,8 @@ const Dashboard = () => {
                     onLogout={handleLogout}
                 />
             </div>
-            <div className="max-w-7xl mx-auto py-4">
+            <div className="mx-4">
+            <div className="max-w-7xl mx-auto  py-4">
                 {/* Toolbar */}
                 <div className="my-5 sm:mb-6 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
                     <div>
@@ -358,7 +364,7 @@ const Dashboard = () => {
                                 <table className="w-full text-sm">
                                     <thead className="sticky mb-2">
                                         <tr
-                                            className={`text-left ${dark ? "bg-gray-800 text-gray-300" : "bg-gray-100 text-gray-600"
+                                            className={` ${dark ? "bg-gray-800 text-gray-300" : "bg-gray-100 text-gray-600"
                                                 }`}
                                         >
                                             {[
@@ -415,6 +421,9 @@ const Dashboard = () => {
                                                         >
                                                             <FontAwesomeIcon icon={faChartSimple} />
                                                         </a>
+                                                        <Link to={`/holding/${row.Company}?pid=${encodeURIComponent(pid)}`} className="text-blue-600 underline">
+                                                            <FontAwesomeIcon icon={faClipboard} className="text-black mx-2" />
+                                                        </Link>
                                                         <span className="ml-1">{row.Company}</span>
                                                     </td>
                                                     <td className="px-3 py-3 text-center">{row["Quantity"]}</td>
@@ -569,16 +578,10 @@ const Dashboard = () => {
                             </div>
                         </Section>
 
-                        {/* Goals */}
-                        <Section dark={dark} title="Goal Tracker">
-                            <GoalSection
-                                currentPortfolioValue={String(calculateTotalValue("Current Value"))}
-                                darkMode={dark}
-                            />
-                        </Section>
                     </>
                 )}
             </div>
+        </div>
         </div>
     );
 };
