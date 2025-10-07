@@ -1,101 +1,159 @@
-import React from "react";
-import { Pie } from "react-chartjs-2";
+import React, { useMemo } from "react";
+import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { format as formatIndianNumber } from "indian-number-format";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const PieChartSector = ({ data, darkMode }) => {
-    // Consolidate data by sector
-    const consolidatedData = data.reduce((acc, item) => {
-        const { Sector, "Current Value": currentValue } = item;
-        acc[Sector] = (acc[Sector] || 0) + Number(currentValue || 0);
-        return acc;
-    }, {});
+const LIGHT_COLORS = [
+  "#6366F1", "#22C55E", "#F59E0B", "#EF4444", "#06B6D4",
+  "#A855F7", "#84CC16", "#F97316", "#14B8A6", "#3B82F6"
+];
+const DARK_COLORS = [
+  "#818CF8", "#34D399", "#FBBF24", "#F87171", "#22D3EE",
+  "#C084FC", "#A3E635", "#FB923C", "#2DD4BF", "#60A5FA"
+];
 
-    const sortedDataArray = Object.entries(consolidatedData).sort(
-        ([sectorA, valueA], [sectorB, valueB]) => valueB - valueA
-    );
+function useSectorSeries(
+  rows,
+  { groupBy = "Sector", valueKey = "Current Value", topN = 9, minPct = 0.02 } = {}
+) {
+  return useMemo(() => {
+    const map = new Map();
+    for (const row of rows || []) {
+      const key = String(row?.[groupBy] ?? "Unknown").trim() || "Unknown";
+      const val = Number(row?.[valueKey] ?? 0);
+      if (!isFinite(val) || val <= 0) continue;
+      map.set(key, (map.get(key) || 0) + val);
+    }
+    const arr = Array.from(map, ([label, value]) => ({ label, value }))
+      .sort((a, b) => b.value - a.value);
 
-    // Convert back to an object if necessary
-    const sortedConsolidatedData = Object.fromEntries(sortedDataArray);
+    const total = arr.reduce((s, d) => s + d.value, 0);
+    const majors = [];
+    let other = 0;
+    arr.forEach((d, i) => {
+      const pct = total ? d.value / total : 0;
+      if (i < topN && pct >= minPct) majors.push(d);
+      else other += d.value;
+    });
+    if (other > 0) majors.push({ label: "Other", value: other });
 
+    return { series: majors, total };
+  }, [rows, groupBy, valueKey, topN, minPct]);
+}
 
-    const totalValue = Object.values(consolidatedData).reduce((sum, value) => sum + value, 0);
+const PieChartSector = ({
+  data = [],
+  darkMode = false,
+  title = "Allocation by Sector",
+  height = 360,
+  groupBy = "Sector",
+  valueKey = "Current Value",
+  topN = 9,
+  minPct = 0.02,
+}) => {
+  const { series, total } = useSectorSeries(data, { groupBy, valueKey, topN, minPct });
 
-    // Convert the consolidated object into chart data
-    const chartData = {
-        labels: Object.keys(sortedConsolidatedData), // Sectors
-        datasets: [
-            {
-                label: "Current Value Distribution",
-                data: Object.values(sortedConsolidatedData), // Summed up values
-                backgroundColor: [
-                    "#FF6384",
-                    "#36A2EB",
-                    "#FFCE56",
-                    "#4CAF50",
-                    "#FFC107",
-                    "#673AB7",
-                    "#E91E63",
-                    "#00BCD4",
-                    "#9C27B0",
-                    "#009688",
-                ],
-                hoverOffset: 10,
-            },
-        ],
-    };
-
-    const options = {
-        plugins: {
-            legend: {
-                position: "bottom",
-                labels: {
-                    font: {
-                        size: 9,
-                    },
-                    color: darkMode ? "#FFFFFF" : "#000000", // Legend text color
-                },
-            },
-            tooltip: {
-                callbacks: {
-                    label: function (tooltipItem) {
-                        const value = tooltipItem.raw; // Current value
-                        const percentage = ((value / totalValue) * 100).toFixed(2); // Calculate percentage
-                        return `Value: INR ${value.toLocaleString()} (${percentage}%)`;
-                    },
-                },
-                backgroundColor: darkMode ? "#333333" : "#FFFFFF", // Tooltip background color
-                titleColor: darkMode ? "#FFFFFF" : "#000000", // Tooltip title color
-                bodyColor: darkMode ? "#FFFFFF" : "#000000", // Tooltip body color
-            },
-        },
-        maintainAspectRatio: false,
-        layout: {
-            padding: 2,
-        },
-        elements: {
-            arc: {
-                borderWidth: 0,
-                borderColor: darkMode ? "#333333" : "#FFFFFF", // Adjust border for dark mode
-            },
-        },
-    };
-
+  if (!series.length) {
     return (
-        <div
-            style={{
-                width: "100%",
-                height: "500px",
-                backgroundColor: darkMode ? "#1F2937" : "#FFFFFF", // Dark gray for dark mode, white for light mode
-                color: darkMode ? "#FFFFFF" : "#000000", // Ensure text color matches the mode
-                padding: "1rem",
-                borderRadius: "10px",
-            }}
-        >
-            <Pie data={chartData} options={options} />
-        </div>
+      <section className={`rounded-xl border p-4 ${darkMode ? "bg-neutral-900 border-neutral-800" : "bg-white border-gray-200"}`}>
+        <div className={`text-sm ${darkMode ? "text-neutral-400" : "text-gray-500"}`}>No data available.</div>
+      </section>
     );
+  }
+
+  const labels = series.map(s => s.label);
+  const values = series.map(s => s.value);
+  const palette = darkMode ? DARK_COLORS : LIGHT_COLORS;
+  const colors = labels.map((_, i) => palette[i % palette.length]);
+  const borderColor = darkMode ? "#0B0F19" : "#FFFFFF";
+
+  const chartData = {
+    labels,
+    datasets: [
+      {
+        data: values,
+        backgroundColor: colors,
+        borderColor,
+        borderWidth: 2,
+        hoverOffset: 8,
+        cutout: "58%", // donut look
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { animateScale: true, animateRotate: true },
+    plugins: {
+      legend: {
+        position: "bottom",
+        labels: {
+          color: darkMode ? "#E5E7EB" : "#111827",
+          usePointStyle: true,
+          pointStyle: "circle",
+          boxWidth: 8,
+          boxHeight: 8,
+          padding: 14,
+        },
+      },
+      tooltip: {
+        backgroundColor: darkMode ? "#0B0F19" : "#FFFFFF",
+        borderColor: darkMode ? "#1F2937" : "#E5E7EB",
+        borderWidth: 1,
+        titleColor: darkMode ? "#9CA3AF" : "#6B7280",
+        bodyColor: darkMode ? "#E5E7EB" : "#111827",
+        displayColors: false,
+        padding: 10,
+        callbacks: {
+          label: (ctx) => {
+            const val = Number(ctx.raw || 0);
+            const pct = total ? ((val / total) * 100).toFixed(2) : "0.00";
+            return `  ₹${formatIndianNumber(Math.round(val))}  (${pct}%)`;
+          },
+        },
+      },
+    },
+  };
+
+  const top = series[0];
+  const topPct = total ? ((top.value / total) * 100).toFixed(1) : "0.0";
+  const totalText = `₹${formatIndianNumber(Math.round(total))}`;
+
+  return (
+    <section className={`rounded-xl border p-4 sm:p-6 shadow-sm ${darkMode ? "bg-neutral-900 border-neutral-800" : "bg-white border-gray-200"}`}>
+      {/* Header */}
+      <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
+        <div>
+          <h3 className={`text-base font-semibold ${darkMode ? "text-neutral-100" : "text-gray-900"}`}>{title}</h3>
+          <p className={`text-xs ${darkMode ? "text-neutral-400" : "text-gray-500"}`}>
+            Top sector: <span className="font-medium">{top.label}</span> • {topPct}%
+          </p>
+        </div>
+        <div className={`text-xs rounded-md px-2 py-1 ${darkMode ? "bg-neutral-800 text-neutral-300" : "bg-gray-100 text-gray-700"}`}>
+          Total: <span className="font-semibold text-indigo-600">{totalText}</span>
+        </div>
+      </div>
+
+      {/* Chart + HTML center overlay (no plugins, no crashes) */}
+      <div className="relative" style={{ width: "100%", height }}>
+        <Doughnut data={chartData} options={options} />
+        <div
+          className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
+          style={{ transform: "translateZ(0)" }}
+        >
+          <div className="text-center">
+            <div className={`text-[11px] ${darkMode ? "text-neutral-400" : "text-gray-500"}`}>Total</div>
+            <div className={`font-semibold text-sm ${darkMode ? "text-neutral-100" : "text-gray-900"}`}>
+              {totalText}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export default PieChartSector;
