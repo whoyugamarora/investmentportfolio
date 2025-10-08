@@ -7,6 +7,7 @@ import {
     faArrowTrendUp,
     faBullseye,
     faShare,
+    faNewspaper,
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function SiteHeader({
@@ -86,6 +87,10 @@ export default function SiteHeader({
                             <FontAwesomeIcon icon={faBullseye} className="mr-2" />
                             Goals
                         </NavLink>
+                        <NavLink to="/news" className={({ isActive }) => `${navLinkBase} ${isActive ? active : inactive}`}>
+                            <FontAwesomeIcon icon={faNewspaper} className="mr-2" />
+                            News
+                        </NavLink>
                     </nav>
 
                     {/* Right: Actions */}
@@ -155,6 +160,9 @@ export default function SiteHeader({
                         </MobileItem>
                         <MobileItem to="/goals" icon={faBullseye} darkMode={darkMode} onClick={() => setOpen(false)}>
                             Goals
+                        </MobileItem>
+                        <MobileItem to="/news" icon={faNewspaper} darkMode={darkMode} onClick={() => setOpen(false)}>
+                            News
                         </MobileItem>
 
                         <div className="mt-2 grid grid-cols-2 gap-2">

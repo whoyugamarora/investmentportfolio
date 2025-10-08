@@ -14,6 +14,7 @@ import ShareManager from "./pages/ShareManager";
 import PublicShare from "./pages/PublicShare";
 import Insights from "./pages/Insights";
 import HoldingDetail from "./pages/HoldingDetail";
+import NewsPage from "./pages/NewsPage";
 
 function RequireAuth({ user, children }) {
   const location = useLocation();
@@ -89,6 +90,13 @@ const App = () => {
           element={
             <RequireAuth user={user}> 
               <HoldingDetail pid="default" />
+            </RequireAuth>
+          } />
+          <Route 
+          path="/news"
+          element={
+            <RequireAuth user={user}> 
+              <NewsPage pid="default" />
             </RequireAuth>
           } />
 
