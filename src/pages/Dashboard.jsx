@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import axios from "axios";
 import { Paper } from "@mui/material";
@@ -35,6 +36,8 @@ import SiteHeader from "../Components/SiteHeader";
 import MetricBadge from "../Components/MetricBadge";
 import BenchmarkSelector from "../Components/BenchmarkSelector";
 import { syncHoldingsToFirestore } from "../lib/syncHoldingsToFirestore";
+import RebalanceSection from "../Components/RebalanceSection";
+
 
 /* ---------------- helpers: cache ---------------- */
 const TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
@@ -57,7 +60,7 @@ function readCache(pid) {
 function writeCache(pid, data) {
   try {
     localStorage.setItem(cacheKeyFor(pid), JSON.stringify({ ts: nowMs(), data }));
-  } catch {}
+  } catch { }
 }
 function isFresh(ts) {
   return typeof ts === "number" && nowMs() - ts < TTL_MS;
@@ -357,11 +360,10 @@ const Dashboard = () => {
               <button
                 onClick={refreshNow}
                 disabled={!online}
-                className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium ${
-                  online
+                className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium ${online
                     ? "border-indigo-600 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20"
                     : "border-gray-300 text-gray-400 cursor-not-allowed"
-                }`}
+                  }`}
                 title={online ? "Fetch latest and update cache" : "You are offline"}
               >
                 <FontAwesomeIcon icon={faArrowRotateRight} />
@@ -609,6 +611,13 @@ const Dashboard = () => {
                 <Section dark={dark} title="Today's Losers">
                   <TodayLosers data={data} darkMode={dark} />
                 </Section>
+              </div>
+
+              {/* Rebalance */}
+              <div className="grid grid-cols-1 gap-6 mb-6">
+              <Section dark={dark} title="Rebalance (Ideal vs Current)">
+                <RebalanceSection data={data} darkMode={dark} />
+              </Section>
               </div>
 
               {/* Valuation Buckets */}

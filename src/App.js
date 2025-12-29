@@ -15,6 +15,8 @@ import PublicShare from "./pages/PublicShare";
 import Insights from "./pages/Insights";
 import HoldingDetail from "./pages/HoldingDetail";
 import NewsPage from "./pages/NewsPage";
+import WhatIf from "./pages/WhatIf";
+import CompanyNotes from "./pages/CompanyNotes";
 
 function RequireAuth({ user, children }) {
   const location = useLocation();
@@ -85,23 +87,34 @@ const App = () => {
             </RequireAuth>
           }
         />
-        <Route 
+        <Route
           path="/holding/:symbol"
           element={
-            <RequireAuth user={user}> 
+            <RequireAuth user={user}>
               <HoldingDetail pid="default" />
             </RequireAuth>
           } />
-          <Route 
+        <Route
           path="/news"
           element={
-            <RequireAuth user={user}> 
+            <RequireAuth user={user}>
               <NewsPage pid="default" />
+            </RequireAuth>
+          } />
+        <Route
+          path="/whatif"
+          element={
+            <RequireAuth user={user}>
+              <WhatIf />
             </RequireAuth>
           } />
 
         <Route path="/share" element={<ShareManager />} />
         <Route path="/s/:id" element={<PublicShare />} />
+
+        <Route path="/notes" element={<CompanyNotes />} />
+        <Route path="/notes/:code" element={<CompanyNotes />} />
+
         <Route
           path="/login"
           element={!user ? <Login /> : <Navigate to="/dashboard" replace />}
