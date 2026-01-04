@@ -12,11 +12,11 @@ import XirrPage from "./pages/XirrPage";
 import GoalProjections from "./pages/GoalProjections";
 import ShareManager from "./pages/ShareManager";
 import PublicShare from "./pages/PublicShare";
-import Insights from "./pages/Insights";
 import HoldingDetail from "./pages/HoldingDetail";
 import NewsPage from "./pages/NewsPage";
 import WhatIf from "./pages/WhatIf";
 import CompanyNotes from "./pages/CompanyNotes";
+import InsightsPage from "./pages/Insights";
 
 function RequireAuth({ user, children }) {
   const location = useLocation();
@@ -83,7 +83,7 @@ const App = () => {
           path="/insights"
           element={
             <RequireAuth user={user}>
-              <Insights />
+              <InsightsPage />
             </RequireAuth>
           }
         />
